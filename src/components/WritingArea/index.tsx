@@ -9,6 +9,8 @@ import { ContextMenu, ContextMenuTrigger } from "../ui/context-menu";
 import { ContextMenu as ShadcnContext } from "../core/ContextMenu";
 import { Sheet } from "../Sheet";
 import { deltaToHtml } from "@/lib/utils";
+import { useAppSelector } from "../store/hooks";
+import { selectAllPaperRefs } from "../store/pdfGenSlice/selectors";
 
 export const WritingArea = ({
   size = { width: "794px", height: "1123px" },
@@ -17,22 +19,20 @@ export const WritingArea = ({
   hideCustomMenu,
   updateStyle,
 }: WritingAreaOptions) => {
+  const allPaperRefs = useAppSelector(selectAllPaperRefs);
   useEffect(() => {
-    if (contentRef.current) {
-      contentRef.current.innerHTML = deltaToHtml(template) as string;
-    }
-  }, [contentRef]);
+    allPaperRefs.map((paperRef) => {
+      if (paperRef?.ref?.current && paperRef) {
+        paperRef.ref.current.innerHTML = deltaToHtml(
+          paperRef.content
+        ) as string;
+      }
+    });
+  }, [allPaperRefs]);
 
   return (
     <ContextMenu>
       <ContextMenuTrigger>
-        <Sheet
-          changeTextStyle={changeTextStyle}
-          contentRef={contentRef}
-          hideCustomMenu={hideCustomMenu}
-          size={size}
-          updateStyle={updateStyle}
-        />
         <Sheet
           changeTextStyle={changeTextStyle}
           contentRef={contentRef}

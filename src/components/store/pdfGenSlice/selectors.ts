@@ -26,3 +26,18 @@ export const selectFocusedData = createSelector(
   [rootPdfGenSlice],
   (state) => state.focusedData
 );
+
+export const selectPaperRef = createSelector(
+  [rootPdfGenSlice, (_state, id: string) => id],
+  (state, id) => state.paperRefs.find((paperRef) => paperRef.id === id)
+);
+
+export const selectAllPaperRefs = createSelector(
+  [rootPdfGenSlice],
+  (state) => state.paperRefs
+);
+
+export const selectFocusedPaperId = createSelector(
+  [rootPdfGenSlice],
+  (state) => state.focusedPaperId
+);

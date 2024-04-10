@@ -2,6 +2,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { Draft, PayloadAction } from "@reduxjs/toolkit";
 import {
+  PaperRef,
   PdfGenState,
   SelectedElementChild,
   SelectedElementType,
@@ -9,7 +10,6 @@ import {
 } from "./types";
 import { FocusedData } from "@/components/types";
 import { fontFamily } from "@/components/utils/constants";
-import { RefObject } from "react";
 
 const initialState: PdfGenState = {
   textStyle: {
@@ -34,6 +34,7 @@ const initialState: PdfGenState = {
     selection: null,
   },
   paperRefs: [],
+  focusedPaperId: "",
 };
 
 export const pdfGenSlice = createSlice({
@@ -43,7 +44,7 @@ export const pdfGenSlice = createSlice({
     setTextStyle: (state, action: PayloadAction<TextStyle>) => {
       state.textStyle = { ...state.textStyle, ...action.payload };
     },
-    setPaperRefs: (state, action: PayloadAction<RefObject<HTMLDivElement>>) => {
+    setPaperRefs: (state, action: PayloadAction<PaperRef>) => {
       //@ts-ignore
       state.paperRefs.push(action.payload);
     },
@@ -51,6 +52,9 @@ export const pdfGenSlice = createSlice({
       state.paperRefs = state.paperRefs.filter(
         (_paper, index) => index !== action.payload
       );
+    },
+    setFocusedPaperId: (state, action: PayloadAction<string | undefined>) => {
+      if (action.payload) state.focusedPaperId = action.payload;
     },
     setSelectedElement: (
       state,
@@ -72,7 +76,13 @@ export const pdfGenSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { setSelectedElement, setTextStyle, setFocusedData } =
-  pdfGenSlice.actions;
+export const {
+  setSelectedElement,
+  setTextStyle,
+  setFocusedData,
+  removePaper,
+  setPaperRefs,
+  setFocusedPaperId,
+} = pdfGenSlice.actions;
 
 export default pdfGenSlice.reducer;

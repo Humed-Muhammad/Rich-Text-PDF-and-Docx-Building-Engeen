@@ -94,13 +94,28 @@ export const getParentTrees = (
   let currentNode = focusedNode as HTMLElement | null | undefined;
   for (let i = 0; i < traverseCount; i++) {
     currentNode = currentNode?.parentElement;
-    if (currentNode?.id === "writingArea") break;
+    if (/writingArea/.test(currentNode?.id ?? "")) break;
     parentTreeArray.push({
       id: currentNode?.id ? currentNode.id : undefined,
       node: currentNode,
     });
   }
   return parentTreeArray;
+};
+
+export const getParentWritingAreaId = (
+  focusedNode: Node | null | undefined
+): string | undefined => {
+  let currentNode = focusedNode as HTMLElement | null | undefined;
+
+  while (currentNode) {
+    if (/writingArea/.test(currentNode?.id ?? "")) {
+      return currentNode?.id;
+    }
+    currentNode = currentNode.parentElement;
+  }
+
+  return undefined;
 };
 
 export const getParentTreesByNodeName = (
@@ -419,9 +434,9 @@ export const generateTable = ({
     tree?.[tree?.length - 1]?.node?.nextSibling ??
     tree?.[tree.length - 1]?.node;
   if (Child) {
-    contentRef.current?.insertBefore(div, Child as Node);
+    contentRef?.current?.insertBefore(div, Child as Node);
   } else {
-    contentRef.current?.appendChild(div);
+    contentRef?.current?.appendChild(div);
   }
 };
 

@@ -75,7 +75,7 @@ const useSelectionStyle = (): StyleUpdater => {
 
         if (selectedElements.length > 1) {
           for (const element of selectedElements) {
-            if (element.id === "writingArea") {
+            if (/writingArea/.test(element.id)) {
               break;
             }
             for (const key of Object.keys(style)) {

@@ -5,13 +5,19 @@ import { useGetFocusedElement } from "./utils/hooks/useGetFocusedElement";
 import { useSpan } from "./utils/hooks/useSpan";
 import { useGetTextProperties } from "./utils/hooks/useGetTextProperties";
 import { useNodeTraverse } from "./utils/hooks/useNodeTraverse";
-import { useAppDispatch } from "./store/hooks";
-import { setFocusedData } from "./store/pdfGenSlice";
-import { handleKeyCombination } from "./utils";
+import { useAppDispatch, useAppSelector } from "./store/hooks";
+import {
+  setFocusedData,
+  setFocusedPaperId,
+  setPaperRefs,
+} from "./store/pdfGenSlice";
+import { getParentWritingAreaId, handleKeyCombination } from "./utils";
 import "../index.css";
 import "../styles/index.css";
 import { htmlToDelta } from "@/lib/utils";
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
+import { selectFocusedData } from "./store/pdfGenSlice/selectors";
+import { v4 } from "uuid";
 
 export const Sheet = ({
   size = { width: "794px", height: "1123px" },
@@ -46,14 +52,42 @@ export const Sheet = ({
     });
   };
 
-  useEffect(() => {}, []);
+  const uniqueKey = useMemo(() => v4(), []);
+  useEffect(() => {
+    if (contentRef) {
+      dispatch(
+        setPaperRefs({
+          ref: contentRef,
+          id: `writingArea-${uniqueKey}`,
+          content: htmlToDelta(contentRef.current?.innerHTML ?? ""),
+        })
+      );
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [uniqueKey]);
+
+  const focusedData = useAppSelector(selectFocusedData);
+
+  const focusedPaperId = useMemo(
+    () => getParentWritingAreaId(focusedData.focusedNode),
+    [focusedData.focusedNode]
+  );
+
+  useEffect(() => {
+    dispatch(setFocusedPaperId(focusedPaperId));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [focusedPaperId]);
+
+  useEffect(() => {
+    console.log({ focusedPaperId });
+  }, [focusedPaperId]);
 
   return (
     <div
       ref={contentRef}
       onClick={handleEditorClick}
       contentEditable
-      id="writingArea"
+      id={`writingArea-${uniqueKey}`}
       className="pdfx-content-editable my-context-menu-target relative"
       style={{
         width: size?.width,

@@ -1,4 +1,9 @@
-import { HeadingType, FocusedData, FontFamilyType } from "@/components/types";
+import {
+  HeadingType,
+  FocusedData,
+  FontFamilyType,
+  Delta,
+} from "@/components/types";
 import { RefObject } from "react";
 
 export type TextStyle = {
@@ -21,10 +26,17 @@ export interface PdfGenState {
   selectedElementRootState: SelectedElementType;
   documentName: string;
   focusedData: FocusedData;
-  paperRefs: RefObject<HTMLDivElement>[];
+  paperRefs: Array<PaperRef>;
+  focusedPaperId: string;
 }
 
 export interface ChangeTextStyle {
   value: HeadingType | FontFamilyType | string;
   label: string;
 }
+
+export type PaperRef = {
+  ref: RefObject<HTMLDivElement> | undefined;
+  id: string;
+  content: Delta;
+};

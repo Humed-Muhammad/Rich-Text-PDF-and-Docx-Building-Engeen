@@ -1,22 +1,12 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { HeadingType } from "@/components/types";
+import { Delta, HeadingType, Operation } from "@/components/types";
 import { headingNodeName } from "@/components/utils/constants";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
-}
-
-interface Delta {
-  ops: Operation[];
-}
-
-interface Operation {
-  insert?: string | object;
-  delete?: number;
-  attributes?: { [key: string]: any };
 }
 
 export function htmlToDelta(html: string): Delta {

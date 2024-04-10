@@ -12,7 +12,7 @@ import { useTextStyleChange } from "./utils/hooks/useTextStyleChange";
 import { StyleUpdater } from "./utils/hooks/useSelectionStyle";
 
 export type EditableContentArea = {
-  contentRef: RefObject<HTMLDivElement>;
+  contentRef: RefObject<HTMLDivElement> | undefined;
 };
 
 export interface WritingAreaOptions extends EditableContentArea {
@@ -206,4 +206,14 @@ export type ColumnOptionHook = {
 export interface ActiveColumn {
   td: Element | undefined;
   index: number;
+}
+
+export interface Delta {
+  ops: Operation[];
+}
+
+export interface Operation {
+  insert?: string | object;
+  delete?: number;
+  attributes?: { [key: string]: any };
 }
