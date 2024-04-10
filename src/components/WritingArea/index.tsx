@@ -1,8 +1,6 @@
 import { WritingAreaOptions } from "../types";
 
-import { template } from "./template";
 import { useEffect } from "react";
-// import { decodeHtmlElements } from "../utils/decodeJsonToHtml";
 import "../../index.css";
 import "../../styles/index.css";
 import { ContextMenu, ContextMenuTrigger } from "../ui/context-menu";
