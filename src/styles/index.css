@@ -1,0 +1,152 @@
+/* MyComponent.css */
+body {
+  @apply m-0 overflow-x-hidden;
+}
+
+.pdfx-writing-area-container {
+  @apply mt-28;
+}
+
+.pdfx-container {
+  @apply flex flex-col w-full h-auto bg-gray-100 items-center font-sans;
+}
+.pdfx-sidebar {
+  @apply h-auto p-1 pb-3 shadow-sm border border-gray-200 bg-slate-100 w-full fixed top-0 z-10 right-0;
+}
+.pdfx-content-editable {
+  @apply bg-white border border-gray-300 my-2 focus:outline-none p-5 px-16;
+}
+
+.pdfx-button {
+  @apply flex items-center justify-center transition-all border-none border-gray-50 shadow rounded mx-1 cursor-pointer;
+}
+
+.pdfx-button-primary {
+  @apply bg-white text-gray-600;
+}
+
+.pdfx-button-active {
+  @apply bg-gray-800 text-white;
+}
+
+.pdfx-flex {
+  display: flex;
+  align-items: center;
+}
+.pdfx-items-center {
+  @apply items-center;
+}
+
+.pdfx-justify-center {
+  @apply justify-center;
+}
+
+.pdfx-relative {
+  position: relative;
+}
+.pdfx-absolute {
+  position: absolute;
+}
+
+.bg-white {
+  background-color: white;
+}
+.pdfx-margin-x-2 {
+  @apply mx-2;
+}
+.pdfx-h-7 {
+  height: 1.7rem;
+}
+
+.pdfx-select-button {
+  @apply inline-flex w-36 h-9 font-sans justify-center gap-x-1.5 rounded-md bg-white px-3 py-1 text-sm font-semibold text-gray-600 shadow ring-1 ring-inset ring-gray-300 hover:bg-gray-50;
+}
+
+.pdfx-select-container {
+  @apply relative inline-block text-left;
+}
+
+.pdfx-select-list-container {
+  @apply absolute right-[-5px] z-10 mt-1 w-40 origin-top-right rounded-md bg-white shadow ring-1 ring-black;
+}
+.pdfx-select-list-item {
+  @apply cursor-pointer font-medium hover:text-blue-500 transition-all hover:bg-gray-100 text-gray-700 block px-4 p-2 m-0 text-sm;
+}
+
+.pdfx-selector-svg {
+  @apply -mr-1 h-5 w-5 text-gray-400;
+}
+
+.pdfx-font-size {
+  @apply w-16 h-9 border border-gray-300 rounded-sm p-1 mx-1 text-center;
+}
+
+.pdfx-select {
+  width: 200px;
+  height: 30px;
+  padding: 2px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  color: #333;
+}
+
+.pdfx-select option {
+  background-color: #fff;
+  color: #333;
+  border: 1px solid #ccc;
+  padding: 12px;
+}
+
+.pdfx-select option:hover {
+  background-color: #f5f5f5;
+}
+
+.pdfx-select option:checked {
+  background-color: #007bff;
+  color: #fff;
+}
+
+#pdfx-context-menu {
+  display: none;
+  position: absolute;
+  background-color: #fff;
+  list-style: none;
+  z-index: 1;
+}
+
+.pdfx-context-menu {
+  @apply shadow-sm p-1 flex w-56 border border-gray-300;
+}
+
+table {
+  width: 100%;
+}
+
+.pdfx-table-container {
+  width: 100%;
+}
+/* tr:hover {
+  @apply shadow transition-all;
+} */
+
+td {
+  @apply border border-gray-300 max-w-[10px] h-12 p-1 break-words !important;
+}
+
+.pdfx-shadow {
+  @apply shadow-lg transition-all;
+}
+
+.pdfx-shadow-none {
+  @apply shadow-none transition-all;
+}
+
+h1 {
+  font-size: 32px;
+}
+
+h2 {
+  font-size: 28px;
+}
