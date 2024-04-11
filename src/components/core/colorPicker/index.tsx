@@ -9,11 +9,7 @@ import { CompactPicker, RGBColor } from "react-color";
 import { CoreButton } from "..";
 import useSelectionStyle from "@/components/utils/hooks/useSelectionStyle";
 
-export const ColorPicker = ({
-  textStyle,
-  contentRef,
-  handleNodeStyle,
-}: SideBarProps) => {
+export const ColorPicker = ({ textStyle, contentRef }: SideBarProps) => {
   const dispatch = useAppDispatch();
   const [selectedColor, setSelectedColor] = useState("#000");
   const [displayColorPicker, setDisplayColorPicker] = useState(false);
@@ -38,9 +34,9 @@ export const ColorPicker = ({
     // });
 
     setDisplayColorPicker(false);
-    if (contentRef.current) {
-      contentRef.current?.focus();
-      contentRef.current.onfocus?.(handleClosePicker);
+    if (contentRef) {
+      contentRef.focus();
+      contentRef.onfocus?.(handleClosePicker);
     }
   };
 

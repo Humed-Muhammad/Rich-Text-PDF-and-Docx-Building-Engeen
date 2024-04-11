@@ -8,7 +8,7 @@ import {
   SelectedElementType,
   TextStyle,
 } from "./types";
-import { FocusedData } from "@/components/types";
+import { Delta, FocusedData } from "@/components/types";
 import { fontFamily } from "@/components/utils/constants";
 
 const initialState: PdfGenState = {
@@ -45,9 +45,34 @@ export const pdfGenSlice = createSlice({
       state.textStyle = { ...state.textStyle, ...action.payload };
     },
     setPaperRefs: (state, action: PayloadAction<PaperRef>) => {
-      //@ts-ignore
-      state.paperRefs.push(action.payload);
+      // Check if the payload value already exists in the paperRefs array
+      const existingIndex = state.paperRefs.findIndex(
+        (ref) => ref.id === action.payload.id
+      );
+
+      if (existingIndex !== -1) {
+        // If the payload value exists, replace it with the new value
+        state.paperRefs[existingIndex] = action.payload;
+      } else {
+        // If the payload value doesn't exist, add it to the array
+        state.paperRefs.push(action.payload);
+      }
     },
+
+    updatePaperRefContent: (
+      state,
+      action: PayloadAction<{ id: string; content: Delta }>
+    ) => {
+      const existingIndex = state.paperRefs.findIndex(
+        (ref) => ref.id === action.payload.id
+      );
+
+      if (existingIndex !== -1) {
+        // Update the content of the existing paperRef
+        state.paperRefs[existingIndex].content = action.payload.content;
+      }
+    },
+
     removePaper: (state, action: PayloadAction<number>) => {
       state.paperRefs = state.paperRefs.filter(
         (_paper, index) => index !== action.payload
@@ -83,6 +108,7 @@ export const {
   removePaper,
   setPaperRefs,
   setFocusedPaperId,
+  updatePaperRefContent,
 } = pdfGenSlice.actions;
 
 export default pdfGenSlice.reducer;

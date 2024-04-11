@@ -1,18 +1,19 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
-  RefObject,
   CSSProperties,
   DetailedHTMLProps,
   ButtonHTMLAttributes,
   ReactNode,
   Ref,
+  RefObject,
 } from "react";
 import { NodeStyle, TextStyleType } from "./utils/constants";
 import { useTextStyleChange } from "./utils/hooks/useTextStyleChange";
 import { StyleUpdater } from "./utils/hooks/useSelectionStyle";
 
 export type EditableContentArea = {
-  contentRef: RefObject<HTMLDivElement> | undefined;
+  contentRef?: HTMLDivElement | null | undefined;
+  paperRef?: HTMLDivElement | null | undefined;
 };
 
 export interface WritingAreaOptions extends EditableContentArea {
@@ -20,6 +21,7 @@ export interface WritingAreaOptions extends EditableContentArea {
   changeTextStyle: ReturnType<typeof useTextStyleChange>;
   hideCustomMenu: () => void;
   updateStyle: StyleUpdater;
+  id?: string;
 }
 
 export type HeadingType = "H1" | "H2" | "H3" | "H4" | "H5" | "H6" | "P";

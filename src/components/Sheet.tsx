@@ -10,21 +10,22 @@ import {
   setFocusedData,
   setFocusedPaperId,
   setPaperRefs,
+  updatePaperRefContent,
 } from "./store/pdfGenSlice";
 import { getParentWritingAreaId, handleKeyCombination } from "./utils";
 import "../index.css";
 import "../styles/index.css";
 import { htmlToDelta } from "@/lib/utils";
-import { useEffect, useMemo, useRef } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 import { selectFocusedData } from "./store/pdfGenSlice/selectors";
-import { v4 } from "uuid";
 
 export const Sheet = ({
   size = { width: "794px", height: "1123px" },
-  // contentRef,
+  paperRef,
   hideCustomMenu,
+  id,
 }: WritingAreaOptions) => {
-  const contentRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(paperRef ?? null);
   const dispatch = useAppDispatch();
   const { getFocusedElement } = useGetFocusedElement();
   const { setTextProperties } = useGetTextProperties();
@@ -32,10 +33,10 @@ export const Sheet = ({
     useNodeTraverse();
   const { createElement } = useSpan();
 
-  const handleEditorClick = () => {
-    hideCustomMenu();
+  const handleEditorClick = useCallback(() => {
     contentRef?.current?.focus();
-  };
+    hideCustomMenu();
+  }, [contentRef, hideCustomMenu]);
 
   const createSpanElementAndListenToFocus = async (
     focusedData: FocusedData,
@@ -52,20 +53,6 @@ export const Sheet = ({
     });
   };
 
-  const uniqueKey = useMemo(() => v4(), []);
-  useEffect(() => {
-    if (contentRef) {
-      dispatch(
-        setPaperRefs({
-          ref: contentRef,
-          id: `writingArea-${uniqueKey}`,
-          content: htmlToDelta(contentRef.current?.innerHTML ?? ""),
-        })
-      );
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [uniqueKey]);
-
   const focusedData = useAppSelector(selectFocusedData);
 
   const focusedPaperId = useMemo(
@@ -75,19 +62,37 @@ export const Sheet = ({
 
   useEffect(() => {
     dispatch(setFocusedPaperId(focusedPaperId));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [focusedPaperId]);
+  }, [focusedPaperId, dispatch]);
 
   useEffect(() => {
-    console.log({ focusedPaperId });
-  }, [focusedPaperId]);
+    if (contentRef.current && !paperRef) {
+      dispatch(
+        setPaperRefs({
+          ref: contentRef.current,
+          id: `writingArea-${id}`,
+          content: htmlToDelta(contentRef.current.innerHTML),
+        })
+      );
+    }
+  }, [dispatch, paperRef, id]);
+
+  useEffect(() => {
+    if (contentRef.current) {
+      dispatch(
+        updatePaperRefContent({
+          id: id as string,
+          content: htmlToDelta(contentRef.current.innerHTML),
+        })
+      );
+    }
+  }, [contentRef.current?.innerHTML, id, dispatch]);
 
   return (
     <div
       ref={contentRef}
       onClick={handleEditorClick}
       contentEditable
-      id={`writingArea-${uniqueKey}`}
+      id={id}
       className="pdfx-content-editable my-context-menu-target relative"
       style={{
         width: size?.width,

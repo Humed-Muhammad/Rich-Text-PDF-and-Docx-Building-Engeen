@@ -9,6 +9,7 @@ import { Sheet } from "../Sheet";
 import { deltaToHtml } from "@/lib/utils";
 import { useAppSelector } from "../store/hooks";
 import { selectAllPaperRefs } from "../store/pdfGenSlice/selectors";
+import { v4 } from "uuid";
 
 export const WritingArea = ({
   size = { width: "794px", height: "1123px" },
@@ -19,25 +20,39 @@ export const WritingArea = ({
 }: WritingAreaOptions) => {
   const allPaperRefs = useAppSelector(selectAllPaperRefs);
   useEffect(() => {
-    allPaperRefs.map((paperRef) => {
-      if (paperRef?.ref?.current && paperRef) {
-        paperRef.ref.current.innerHTML = deltaToHtml(
-          paperRef.content
-        ) as string;
-      }
-    });
+    if (allPaperRefs.length > 0)
+      allPaperRefs.map((paperRef) => {
+        if (paperRef?.ref && paperRef) {
+          paperRef.ref.innerHTML = deltaToHtml(paperRef.content) as string;
+        }
+      });
   }, [allPaperRefs]);
 
+  console.log({ allPaperRefs });
   return (
     <ContextMenu>
       <ContextMenuTrigger>
-        <Sheet
-          changeTextStyle={changeTextStyle}
-          contentRef={contentRef}
-          hideCustomMenu={hideCustomMenu}
-          size={size}
-          updateStyle={updateStyle}
-        />
+        {!allPaperRefs.length ? (
+          <Sheet
+            id={v4()}
+            changeTextStyle={changeTextStyle}
+            hideCustomMenu={hideCustomMenu}
+            size={size}
+            updateStyle={updateStyle}
+          />
+        ) : (
+          allPaperRefs.map((paperRef, key) => (
+            <Sheet
+              id={paperRef.id}
+              changeTextStyle={changeTextStyle}
+              hideCustomMenu={hideCustomMenu}
+              size={size}
+              updateStyle={updateStyle}
+              key={key}
+              paperRef={paperRef.ref}
+            />
+          ))
+        )}
       </ContextMenuTrigger>
       <ShadcnContext
         updateStyle={updateStyle}

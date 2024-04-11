@@ -4,7 +4,6 @@ import {
   FontFamilyType,
   Delta,
 } from "@/components/types";
-import { RefObject } from "react";
 
 export type TextStyle = {
   bold: boolean;
@@ -36,7 +35,7 @@ export interface ChangeTextStyle {
 }
 
 export type PaperRef = {
-  ref: RefObject<HTMLDivElement> | undefined;
+  ref: HTMLDivElement | null;
   id: string;
   content: Delta;
 };

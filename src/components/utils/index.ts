@@ -434,9 +434,9 @@ export const generateTable = ({
     tree?.[tree?.length - 1]?.node?.nextSibling ??
     tree?.[tree.length - 1]?.node;
   if (Child) {
-    contentRef?.current?.insertBefore(div, Child as Node);
+    contentRef?.insertBefore(div, Child as Node);
   } else {
-    contentRef?.current?.appendChild(div);
+    contentRef?.appendChild(div);
   }
 };
 

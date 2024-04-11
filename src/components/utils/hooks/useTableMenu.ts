@@ -72,7 +72,7 @@ export const useTableMenu = ({ contentRef }: Partial<WritingAreaOptions>) => {
     });
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tableCreated, contentRef?.current, domUpdated]);
+  }, [tableCreated, contentRef, domUpdated]);
 
   const insertRowBelow = useCallback(() => {
     const tr = generateTableRow({
@@ -104,7 +104,7 @@ export const useTableMenu = ({ contentRef }: Partial<WritingAreaOptions>) => {
   }, [handleRowColOperation]);
 
   useEffect(() => {
-    contentRef?.current?.addEventListener("click", () => {
+    contentRef?.addEventListener("click", () => {
       setRowSettingPosition({ x: 0, y: 0 });
       setColumnSettingPosition({ x: 0, y: 0 });
     });
