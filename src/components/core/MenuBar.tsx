@@ -95,6 +95,7 @@ export function MenuBar({ contentRef }: EditableContentArea) {
               </div>
               <Button
                 onClick={() => {
+                  console.log(contentRef);
                   generateTable({
                     columns: colRow.col,
                     rows: colRow.row,

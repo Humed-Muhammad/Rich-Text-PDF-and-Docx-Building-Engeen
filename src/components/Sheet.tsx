@@ -66,6 +66,7 @@ export const Sheet = ({
 
   useEffect(() => {
     if (contentRef.current && !paperRef) {
+      contentRef.current.id = `writingArea-${id}`;
       dispatch(
         setPaperRefs({
           ref: contentRef.current,
@@ -73,8 +74,9 @@ export const Sheet = ({
           content: htmlToDelta(contentRef.current.innerHTML),
         })
       );
+      console.log(id);
     }
-  }, [dispatch, paperRef, id]);
+  }, [dispatch, paperRef, id, contentRef]);
 
   useEffect(() => {
     if (contentRef.current) {

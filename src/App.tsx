@@ -21,7 +21,8 @@ function App() {
   const paperRef = useAppSelector((state) =>
     selectPaperRef(state, focusedPaperId)
   );
-
+  // console.log(focusedPaperId);
+  // console.log(paperRef);
   return (
     <div className="pdfx-container">
       <SideBar

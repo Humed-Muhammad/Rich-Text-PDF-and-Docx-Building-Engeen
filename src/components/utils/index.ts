@@ -302,6 +302,13 @@ export const createSpanElement = ({
   selection?.collapseToEnd();
 };
 
+/**
+ * The function `styleTheSelectedRange` creates a new span element with specified styles and inserts it
+ * into the selected range within a focused element.
+ * @param {UseSpanOptions}  - The `styleTheSelectedRange` function takes in an object with the
+ * following properties:
+ * @returns An HTMLSpanElement is being returned.
+ */
 export const styleTheSelectedRange = ({
   focusedData,
   style,
@@ -380,7 +387,7 @@ export function extractNumberFromString(value: string): number | null {
   return null;
 }
 
-export const generateTable = ({
+export const generateTable = async ({
   rows,
   columns,
   contentRef,
@@ -430,12 +437,28 @@ export const generateTable = ({
  tries to access the last node's next sibling in the tree, and if it exists, it inserts a `div`
  element before that node. If the next sibling does not exist, it falls back to inserting the `div`
  element as a child of the content reference. */
-  const Child =
-    tree?.[tree?.length - 1]?.node?.nextSibling ??
-    tree?.[tree.length - 1]?.node;
+  let Child = null;
+  if (tree?.length > 0) {
+    const lastNode = tree[tree.length - 1]?.node;
+    if (lastNode) {
+      Child = lastNode.nextSibling;
+      if (!Child) {
+        Child = lastNode;
+      }
+    }
+  }
+
+  // Wait for the DOM to update before inserting the div element
+  await new Promise((resolve) => {
+    requestAnimationFrame(resolve);
+  });
+
   if (Child) {
+    console.log(contentRef?.childNodes);
+    console.log(Child, div);
     contentRef?.insertBefore(div, Child as Node);
   } else {
+    if (contentRef) contentRef.style.background = "red";
     contentRef?.appendChild(div);
   }
 };

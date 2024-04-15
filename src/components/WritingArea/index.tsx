@@ -26,12 +26,12 @@ export const WritingArea = ({
           paperRef.ref.innerHTML = deltaToHtml(paperRef.content) as string;
         }
       });
+    console.log(allPaperRefs);
   }, [allPaperRefs]);
 
-  console.log({ allPaperRefs });
   return (
     <ContextMenu>
-      <ContextMenuTrigger>
+      <ContextMenuTrigger id="writingArea-playground-container">
         {!allPaperRefs.length ? (
           <Sheet
             id={v4()}

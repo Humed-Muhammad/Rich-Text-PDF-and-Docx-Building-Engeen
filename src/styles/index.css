@@ -14,7 +14,7 @@ body {
   @apply h-auto p-1 pb-3 shadow-sm border border-gray-200 bg-slate-100 w-full fixed top-0 z-10 right-0;
 }
 .pdfx-content-editable {
-  @apply bg-white border border-gray-300 my-2 focus:outline-none p-5 px-16;
+  @apply bg-white border border-gray-300 my-2 focus:outline-none p-5 px-10;
 }
 
 .pdfx-button {

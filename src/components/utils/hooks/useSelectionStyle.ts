@@ -149,7 +149,7 @@ const useSelectionStyle = (): StyleUpdater => {
         }
       }
     },
-    [focusedData]
+    [focusedData, dispatch]
   );
 
   useEffect(() => {
