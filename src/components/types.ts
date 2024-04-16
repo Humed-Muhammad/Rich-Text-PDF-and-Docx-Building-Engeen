@@ -5,7 +5,6 @@ import {
   ButtonHTMLAttributes,
   ReactNode,
   Ref,
-  RefObject,
 } from "react";
 import { NodeStyle, TextStyleType } from "./utils/constants";
 import { useTextStyleChange } from "./utils/hooks/useTextStyleChange";
@@ -13,7 +12,7 @@ import { StyleUpdater } from "./utils/hooks/useSelectionStyle";
 
 export type EditableContentArea = {
   contentRef?: HTMLDivElement | null | undefined;
-  paperRef?: HTMLDivElement | null | undefined;
+  content?: string;
 };
 
 export interface WritingAreaOptions extends EditableContentArea {

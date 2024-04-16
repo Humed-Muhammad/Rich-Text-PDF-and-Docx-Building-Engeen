@@ -4,6 +4,7 @@ import {
   FontFamilyType,
   Delta,
 } from "@/components/types";
+import { RefObject } from "react";
 
 export type TextStyle = {
   bold: boolean;
@@ -27,15 +28,17 @@ export interface PdfGenState {
   focusedData: FocusedData;
   paperRefs: Array<PaperRef>;
   focusedPaperId: string;
+  currentRef: CurrentRef;
 }
 
+export type CurrentRef = RefObject<HTMLDivElement> | null;
 export interface ChangeTextStyle {
   value: HeadingType | FontFamilyType | string;
   label: string;
 }
 
 export type PaperRef = {
-  ref: HTMLDivElement | null;
+  // ref: HTMLDivElement | null;
   id: string;
   content: Delta;
 };

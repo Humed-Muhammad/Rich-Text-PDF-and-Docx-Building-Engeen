@@ -1,6 +1,5 @@
 import { WritingAreaOptions } from "../types";
 
-import { useEffect } from "react";
 import "../../index.css";
 import "../../styles/index.css";
 import { ContextMenu, ContextMenuTrigger } from "../ui/context-menu";
@@ -9,7 +8,6 @@ import { Sheet } from "../Sheet";
 import { deltaToHtml } from "@/lib/utils";
 import { useAppSelector } from "../store/hooks";
 import { selectAllPaperRefs } from "../store/pdfGenSlice/selectors";
-import { v4 } from "uuid";
 
 export const WritingArea = ({
   size = { width: "794px", height: "1123px" },
@@ -19,40 +17,31 @@ export const WritingArea = ({
   updateStyle,
 }: WritingAreaOptions) => {
   const allPaperRefs = useAppSelector(selectAllPaperRefs);
-  useEffect(() => {
-    if (allPaperRefs.length > 0)
-      allPaperRefs.map((paperRef) => {
-        if (paperRef?.ref && paperRef) {
-          paperRef.ref.innerHTML = deltaToHtml(paperRef.content) as string;
-        }
-      });
-    console.log(allPaperRefs);
-  }, [allPaperRefs]);
+  // useEffect(() => {
+  //   if (allPaperRefs.length > 0)
+  //     allPaperRefs.map((paperRef) => {
+  //       if (paperRef?.ref && paperRef) {
+  //         paperRef.ref.innerHTML = deltaToHtml(paperRef.content) as string;
+  //       }
+  //     });
+  //   console.log(allPaperRefs);
+  // }, [JSON.stringify(allPaperRefs)]);
 
   return (
     <ContextMenu>
       <ContextMenuTrigger id="writingArea-playground-container">
-        {!allPaperRefs.length ? (
+        {allPaperRefs?.map((paperRef, key) => (
           <Sheet
-            id={v4()}
+            id={paperRef.id}
             changeTextStyle={changeTextStyle}
             hideCustomMenu={hideCustomMenu}
             size={size}
             updateStyle={updateStyle}
+            key={key}
+            // paperRef={paperRef.ref}
+            content={deltaToHtml(paperRef.content)}
           />
-        ) : (
-          allPaperRefs.map((paperRef, key) => (
-            <Sheet
-              id={paperRef.id}
-              changeTextStyle={changeTextStyle}
-              hideCustomMenu={hideCustomMenu}
-              size={size}
-              updateStyle={updateStyle}
-              key={key}
-              paperRef={paperRef.ref}
-            />
-          ))
-        )}
+        ))}
       </ContextMenuTrigger>
       <ShadcnContext
         updateStyle={updateStyle}

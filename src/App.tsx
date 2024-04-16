@@ -7,27 +7,21 @@ import { ColumnMenu, RowMenu } from "./components/core/TableMenu";
 import useSelectionStyle from "./components/utils/hooks/useSelectionStyle";
 import { useTD } from "./components/utils/hooks/useTD";
 import { useAppSelector } from "./components/store/hooks";
-import {
-  selectFocusedPaperId,
-  selectPaperRef,
-} from "./components/store/pdfGenSlice/selectors";
+import { selectCurrentRef } from "./components/store/pdfGenSlice/selectors";
 
 function App() {
-  const focusedPaperId = useAppSelector(selectFocusedPaperId);
   const changeTextStyle = useTextStyleChange();
   const updateStyle = useSelectionStyle();
   const { hideCustomMenu } = useContextMenu(changeTextStyle.focusedData);
   useTD();
-  const paperRef = useAppSelector((state) =>
-    selectPaperRef(state, focusedPaperId)
-  );
-  // console.log(focusedPaperId);
-  // console.log(paperRef);
+
+  const ref = useAppSelector(selectCurrentRef);
+
   return (
     <div className="pdfx-container">
       <SideBar
         updateStyle={updateStyle}
-        contentRef={paperRef?.ref}
+        contentRef={ref?.current}
         {...changeTextStyle}
       />
       {/* <Ruler /> */}
@@ -35,20 +29,20 @@ function App() {
         <WritingArea
           changeTextStyle={changeTextStyle}
           hideCustomMenu={hideCustomMenu}
-          contentRef={paperRef?.ref}
+          contentRef={ref?.current}
           updateStyle={updateStyle}
         />
       </div>
       <RowMenu
         changeTextStyle={changeTextStyle}
         hideCustomMenu={hideCustomMenu}
-        contentRef={paperRef?.ref}
+        contentRef={ref?.current}
         updateStyle={updateStyle}
       />
       <ColumnMenu
         changeTextStyle={changeTextStyle}
         hideCustomMenu={hideCustomMenu}
-        contentRef={paperRef?.ref}
+        contentRef={ref?.current}
         updateStyle={updateStyle}
       />
     </div>

@@ -5,27 +5,25 @@ import { useGetFocusedElement } from "./utils/hooks/useGetFocusedElement";
 import { useSpan } from "./utils/hooks/useSpan";
 import { useGetTextProperties } from "./utils/hooks/useGetTextProperties";
 import { useNodeTraverse } from "./utils/hooks/useNodeTraverse";
-import { useAppDispatch, useAppSelector } from "./store/hooks";
+import { useAppDispatch } from "./store/hooks";
 import {
+  setCurrentRef,
   setFocusedData,
-  setFocusedPaperId,
-  setPaperRefs,
   updatePaperRefContent,
 } from "./store/pdfGenSlice";
-import { getParentWritingAreaId, handleKeyCombination } from "./utils";
+import { handleKeyCombination } from "./utils";
 import "../index.css";
 import "../styles/index.css";
 import { htmlToDelta } from "@/lib/utils";
-import { useCallback, useEffect, useMemo, useRef } from "react";
-import { selectFocusedData } from "./store/pdfGenSlice/selectors";
+import { useCallback, useEffect, useRef } from "react";
 
 export const Sheet = ({
   size = { width: "794px", height: "1123px" },
-  paperRef,
   hideCustomMenu,
   id,
+  content,
 }: WritingAreaOptions) => {
-  const contentRef = useRef<HTMLDivElement>(paperRef ?? null);
+  const contentRef = useRef<HTMLDivElement>(null);
   const dispatch = useAppDispatch();
   const { getFocusedElement } = useGetFocusedElement();
   const { setTextProperties } = useGetTextProperties();
@@ -36,6 +34,7 @@ export const Sheet = ({
   const handleEditorClick = useCallback(() => {
     contentRef?.current?.focus();
     hideCustomMenu();
+    dispatch(setCurrentRef(contentRef));
   }, [contentRef, hideCustomMenu]);
 
   const createSpanElementAndListenToFocus = async (
@@ -53,31 +52,6 @@ export const Sheet = ({
     });
   };
 
-  const focusedData = useAppSelector(selectFocusedData);
-
-  const focusedPaperId = useMemo(
-    () => getParentWritingAreaId(focusedData.focusedNode),
-    [focusedData.focusedNode]
-  );
-
-  useEffect(() => {
-    dispatch(setFocusedPaperId(focusedPaperId));
-  }, [focusedPaperId, dispatch]);
-
-  useEffect(() => {
-    if (contentRef.current && !paperRef) {
-      contentRef.current.id = `writingArea-${id}`;
-      dispatch(
-        setPaperRefs({
-          ref: contentRef.current,
-          id: `writingArea-${id}`,
-          content: htmlToDelta(contentRef.current.innerHTML),
-        })
-      );
-      console.log(id);
-    }
-  }, [dispatch, paperRef, id, contentRef]);
-
   useEffect(() => {
     if (contentRef.current) {
       dispatch(
@@ -88,6 +62,10 @@ export const Sheet = ({
       );
     }
   }, [contentRef.current?.innerHTML, id, dispatch]);
+
+  useEffect(() => {
+    if (contentRef.current && content) contentRef.current.innerHTML = content;
+  }, []);
 
   return (
     <div

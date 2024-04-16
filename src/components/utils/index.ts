@@ -454,11 +454,8 @@ export const generateTable = async ({
   });
 
   if (Child) {
-    console.log(contentRef?.childNodes);
-    console.log(Child, div);
     contentRef?.insertBefore(div, Child as Node);
   } else {
-    if (contentRef) contentRef.style.background = "red";
     contentRef?.appendChild(div);
   }
 };

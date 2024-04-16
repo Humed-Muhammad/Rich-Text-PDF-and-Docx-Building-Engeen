@@ -2,6 +2,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { Draft, PayloadAction } from "@reduxjs/toolkit";
 import {
+  CurrentRef,
   PaperRef,
   PdfGenState,
   SelectedElementChild,
@@ -33,8 +34,24 @@ const initialState: PdfGenState = {
     range: undefined,
     selection: null,
   },
-  paperRefs: [],
+  paperRefs: [
+    {
+      content: {
+        ops: [
+          {
+            insert: "jj",
+            attributes: {
+              SPAN: true,
+              "SPAN-style": "",
+            },
+          },
+        ],
+      },
+      id: "writingArea-1",
+    },
+  ],
   focusedPaperId: "",
+  currentRef: null,
 };
 
 export const pdfGenSlice = createSlice({
@@ -81,6 +98,10 @@ export const pdfGenSlice = createSlice({
     setFocusedPaperId: (state, action: PayloadAction<string | undefined>) => {
       if (action.payload) state.focusedPaperId = action.payload;
     },
+    setCurrentRef: (state, action: PayloadAction<CurrentRef>) => {
+      //@ts-ignore
+      state.currentRef = action.payload;
+    },
     setSelectedElement: (
       state,
       action: PayloadAction<{
@@ -109,6 +130,7 @@ export const {
   setPaperRefs,
   setFocusedPaperId,
   updatePaperRefContent,
+  setCurrentRef,
 } = pdfGenSlice.actions;
 
 export default pdfGenSlice.reducer;
