@@ -39,10 +39,15 @@ const initialState: PdfGenState = {
       content: {
         ops: [
           {
-            insert: "jj",
+            insert: "humed and the blue ",
+          },
+          {
+            insert: "\n",
+          },
+          {
+            insert: "okk hjgjhg",
             attributes: {
-              SPAN: true,
-              "SPAN-style": "",
+              B: true,
             },
           },
         ],

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Delta, HeadingType, Operation } from "@/components/types";
-import { headingNodeName } from "@/components/utils/constants";
+import { headingNodeName, styleNodeName } from "@/components/utils/constants";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -35,22 +35,42 @@ export function htmlToDelta(html: string): Delta {
         const childElement = node as HTMLElement;
         const tagName = childElement.tagName;
 
-        if (tagName === "BR") {
+        if (["BR"].includes(tagName)) {
           op.insert = "\n";
           if (parentAttributes) {
             op.attributes = { ...parentAttributes };
           }
           delta.ops.push(op);
         } else if (
-          ["B", "I", "U", "SPAN", "DIV"].includes(tagName) ||
-          headingNodeName.includes(tagName as HeadingType)
+          styleNodeName.includes(tagName) ||
+          headingNodeName.includes(tagName as HeadingType) ||
+          childElement.getAttribute("style")
         ) {
-          const innerAttributes = {
+          const sx = childElement.getAttribute("style");
+          const attributes: { [key: typeof tagName]: any } = {
             ...parentAttributes,
-            [tagName]: true,
-            [`${tagName}-style`]: childElement.getAttribute("style"),
           };
-          traverse(childElement, innerAttributes);
+          const style = [];
+          if (sx) {
+            style.push(sx);
+            attributes["style"] = style[0];
+          }
+          if (
+            styleNodeName.includes(tagName) ||
+            headingNodeName.includes(tagName as HeadingType)
+          ) {
+            if (tagName === "DIV") {
+              op.insert = "\n";
+              if (parentAttributes) {
+                op.attributes = { ...parentAttributes };
+              }
+              delta.ops.push(op);
+            } else {
+              attributes[tagName] = true;
+            }
+          }
+
+          traverse(childElement, attributes);
         } else if (tagName === "TABLE") {
           const tableDelta = parseTableToDelta(
             childElement as HTMLTableElement
@@ -90,65 +110,65 @@ export function deltaToHtml(delta: Delta): string {
         html += `<td ${styleAttribute}>${op.attributes.content ?? ""}</td>`;
         // currentCellIndex++;
       } else {
-        if (!op.attributes && typeof op.insert === "string") {
-          html += "<span>";
+        if (typeof op.insert === "string") {
+          html += `<span style="${op.attributes?.style ?? ""}">`;
         }
 
         if (op.attributes) {
-          if (op.attributes.DIV) {
-            html += `<div style="${op.attributes?.[`DIV-style`] ?? ""}">`;
-          }
-          if (op.attributes.SPAN) {
-            html += `<span style="${op.attributes?.[`SPAN-style`] ?? ""}">`;
-          }
+          // if (op.attributes.DIV) {
+          //   html += `<div style="${op.attributes?.[`DIV-style`] ?? ""}">`;
+          // }
+          // if (op.attributes.SPAN) {
+          //   html += `<span style="${op.attributes?.[`SPAN-style`] ?? ""}">`;
+          // }
           if (op.attributes && op.attributes.B) {
-            const styleAttribute = op.attributes?.[`B-style`]
-              ? `style="${op.attributes?.[`B-style`]}"`
-              : "";
+            // const styleAttribute = op.attributes?.[`B-style`]
+            //   ? `style="${op.attributes?.[`B-style`]}"`
+            //   : "";
 
-            html += `<b ${styleAttribute}>`;
+            html += `<b>`;
           }
           if (op.attributes.I) {
-            html += `<i style="${op.attributes?.[`I-style`] ?? ""}">`;
+            html += `<i>`;
           }
           if (op.attributes.U) {
-            html += `<u style="${op.attributes?.[`U-style`] ?? ""}">`;
+            html += `<u>`;
           }
           if (op.attributes.H1) {
-            html += `<h1 style="${op.attributes?.[`H1-style`] ?? ""}">`;
+            html += `<h1>`;
           }
 
           if (op.attributes.H2) {
-            html += `<h2 style="${op.attributes?.[`H2-style`] ?? ""}">`;
+            html += `<h2>`;
           }
           if (op.attributes.H3) {
-            html += `<h3 style="${op.attributes?.[`H3-style`] ?? ""}">`;
+            html += `<h3>`;
           }
           if (op.attributes.H4) {
-            html += `<h4 style="${op.attributes?.[`H4-style`] ?? ""}">`;
+            html += `<h4>`;
           }
           if (op.attributes.H5) {
-            html += `<h5 style="${op.attributes?.[`H5-style`] ?? ""}">`;
+            html += `<h5>`;
           }
           if (op.attributes.H6) {
-            html += `<h6 style="${op.attributes?.[`H6-style`] ?? ""}">`;
+            html += `<h6>`;
           }
           if (op.attributes.P) {
-            html += `<p style="${op.attributes?.[`P-style`] ?? ""}">`;
+            html += `<p>`;
           }
         }
 
         html += op.insert;
-        if (!op.attributes && typeof op.insert === "string") {
+        if (typeof op.insert === "string") {
           html += "</span>";
         }
         if (op.attributes) {
-          if (op.attributes.DIV) {
-            html += `</div>`;
-          }
-          if (op.attributes.SPAN) {
-            html += `</span>`;
-          }
+          // if (op.attributes.DIV) {
+          //   html += `</div>`;
+          // }
+          // if (op.attributes.SPAN) {
+          //   html += `</span>`;
+          // }
           if (op.attributes.U) {
             html += "</u>";
           }

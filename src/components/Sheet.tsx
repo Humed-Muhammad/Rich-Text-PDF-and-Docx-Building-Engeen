@@ -1,10 +1,7 @@
-import { FocusedData, WritingAreaOptions } from "./types";
+import { WritingAreaOptions } from "./types";
 
 import { eventKeys } from "./utils/constants";
 import { useGetFocusedElement } from "./utils/hooks/useGetFocusedElement";
-import { useSpan } from "./utils/hooks/useSpan";
-import { useGetTextProperties } from "./utils/hooks/useGetTextProperties";
-import { useNodeTraverse } from "./utils/hooks/useNodeTraverse";
 import { useAppDispatch } from "./store/hooks";
 import {
   setCurrentRef,
@@ -26,31 +23,12 @@ export const Sheet = ({
   const contentRef = useRef<HTMLDivElement>(null);
   const dispatch = useAppDispatch();
   const { getFocusedElement } = useGetFocusedElement();
-  const { setTextProperties } = useGetTextProperties();
-  const { traverseTreeByNodeName, traverseTreeByCSSProperties } =
-    useNodeTraverse();
-  const { createElement } = useSpan();
 
   const handleEditorClick = useCallback(() => {
     contentRef?.current?.focus();
     hideCustomMenu();
     dispatch(setCurrentRef(contentRef));
   }, [contentRef, hideCustomMenu]);
-
-  const createSpanElementAndListenToFocus = async (
-    focusedData: FocusedData,
-    onKeyDown?: boolean
-  ) => {
-    if (!onKeyDown) {
-      createElement({ focusedData });
-    }
-
-    setTextProperties({
-      focusedData,
-      traverseTreeByNodeName,
-      traverseTreeByCSSProperties,
-    });
-  };
 
   useEffect(() => {
     if (contentRef.current) {
@@ -81,29 +59,25 @@ export const Sheet = ({
       onInput={async (event) => {
         console.log(htmlToDelta(event.currentTarget.innerHTML));
         hideCustomMenu();
-        await getFocusedElement().then((data) => {
+        await getFocusedElement(false).then((data) => {
           dispatch(setFocusedData(data));
-          createSpanElementAndListenToFocus(data, false);
         });
       }}
       onMouseUp={async () => {
-        await getFocusedElement().then((data) => {
+        await getFocusedElement(true).then((data) => {
           dispatch(setFocusedData(data));
-          createSpanElementAndListenToFocus(data, true);
         });
       }}
       onMouseDown={async () => {
-        await getFocusedElement().then((data) => {
+        await getFocusedElement(true).then((data) => {
           dispatch(setFocusedData(data));
-          createSpanElementAndListenToFocus(data, true);
         });
       }}
       onKeyDown={async (event) => {
         if (eventKeys.includes(event.key)) {
           hideCustomMenu();
-          await getFocusedElement().then((data) => {
+          await getFocusedElement(true).then((data) => {
             dispatch(setFocusedData(data));
-            createSpanElementAndListenToFocus(data, true);
           });
         }
         handleKeyCombination(event, {
