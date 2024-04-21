@@ -10,6 +10,8 @@ export const headingNodeName: HeadingType[] = [
   "H6",
   "P",
 ];
+
+export const HeadingArray = ["H1", "H2", "H3", "H4", "H5", "H6"];
 export const styleNodeName = ["B", "I", "U", "DIV"];
 
 interface HeadingStyles {

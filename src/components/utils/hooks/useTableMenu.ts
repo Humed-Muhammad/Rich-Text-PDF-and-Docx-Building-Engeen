@@ -109,11 +109,13 @@ export const useTableMenu = ({ contentRef }: Partial<WritingAreaOptions>) => {
       setColumnSettingPosition({ x: 0, y: 0 });
     });
     return () => {
-      setRowSettingPosition({ x: 0, y: 0 });
-      setColumnSettingPosition({ x: 0, y: 0 });
+      contentRef?.removeEventListener("click", () => {
+        setRowSettingPosition({ x: 0, y: 0 });
+        setColumnSettingPosition({ x: 0, y: 0 });
+      });
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [contentRef]);
 
   const { insertColumnLeft, insertColumnRight } = useColumnOptions({
     activeColTr,

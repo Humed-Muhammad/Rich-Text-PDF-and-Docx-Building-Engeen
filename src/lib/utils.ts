@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Delta, HeadingType, Operation } from "@/components/types";
+import { hasCommonElements } from "@/components/utils";
 import { headingNodeName, styleNodeName } from "@/components/utils/constants";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
@@ -94,9 +95,21 @@ export function deltaToHtml(delta: Delta): string {
   let html = "";
   // let currentCellIndex = 0;
 
-  delta.ops.forEach((op) => {
+  delta.ops.forEach((op, index) => {
+    //Inserts
+    const prevInsert = delta.ops[index - 1]?.insert;
+    const currentInsert = delta.ops[index]?.insert;
+    const nextInsert = delta.ops[index + 1]?.insert;
+    const parentTag = "";
+    //@Attrs
+    const prevAttrs = Object.keys(delta.ops[index - 1]?.attributes ?? {});
+    const currentAttrs = Object.keys(delta.ops[index]?.attributes ?? {});
+    const futureAttrs = Object.keys(delta.ops[index + 1]?.attributes ?? {});
     if (op.insert) {
-      if (op.insert === "\n") {
+      if (
+        op.insert === "\n" &&
+        !hasCommonElements(prevAttrs, headingNodeName)
+      ) {
         html += "<br>";
       } else if (op.attributes && op.attributes.table) {
         html += "<table>";
@@ -110,8 +123,15 @@ export function deltaToHtml(delta: Delta): string {
         html += `<td ${styleAttribute}>${op.attributes.content ?? ""}</td>`;
         // currentCellIndex++;
       } else {
-        if (!op.attributes) {
+        if (!op.attributes && op.insert !== "\n") {
           html += `<span>`;
+        } else if (
+          op.insert &&
+          op.attributes?.["style"] &&
+          !hasCommonElements(currentAttrs, headingNodeName)
+        ) {
+          const style = op.attributes?.style;
+          html += `<span style="${style ?? ""}">`;
         }
 
         if (op.attributes) {
@@ -122,19 +142,10 @@ export function deltaToHtml(delta: Delta): string {
           // if (op.attributes.SPAN) {
           //   html += `<span style="${op.attributes?.[`SPAN-style`] ?? ""}">`;
           // }
-          if (op.attributes.B) {
-            html += `<b style="${styleAttribute}">`;
-          }
-          if (op.attributes.I) {
-            html += `<i style="${styleAttribute}">`;
-          }
-          if (op.attributes.U) {
-            html += `<u style="${styleAttribute}">`;
-          }
-          if (op.attributes.H1) {
+
+          if (op.attributes.H1 && nextInsert !== "\n") {
             html += `<h1 style="${styleAttribute}">`;
           }
-
           if (op.attributes.H2) {
             html += `<h2 style="${styleAttribute}">`;
           }
@@ -153,10 +164,24 @@ export function deltaToHtml(delta: Delta): string {
           if (op.attributes.P) {
             html += `<p style="${styleAttribute}">`;
           }
+          if (op.attributes.B) {
+            html += `<b style="${styleAttribute}">`;
+          }
+          if (op.attributes.I) {
+            html += `<i style="${styleAttribute}">`;
+          }
+          if (op.attributes.U) {
+            html += `<u style="${styleAttribute}">`;
+          }
         }
 
         html += op.insert;
-        if (op.insert && !op?.attributes) {
+        if (
+          (op.insert && !op?.attributes) ||
+          (op.insert &&
+            op.attributes?.["style"] &&
+            !hasCommonElements(currentAttrs, headingNodeName))
+        ) {
           html += "</span>";
         }
         if (op.attributes) {
@@ -175,7 +200,7 @@ export function deltaToHtml(delta: Delta): string {
           if (op.attributes.B) {
             html += "</b>";
           }
-          if (op.attributes.H1) {
+          if (op.attributes.H1 && op.insert !== "\n") {
             html += "</h1>";
           }
           if (op.attributes.H2) {
@@ -205,6 +230,63 @@ export function deltaToHtml(delta: Delta): string {
 
   return html;
 }
+
+// export function deltaToHtml(delta: Delta): string {
+//   let html = "";
+//   const prioritizedTags = ["H1", "H2", "H3", "H4", "H5", "H6", "B", "I", "U"];
+//   const openTags: string[] = [];
+//   const parentTag = "";
+
+//   delta.ops.forEach((op, index) => {
+//     if (op.insert) {
+//       let currentHtml = op.insert;
+
+//       // Apply inline styles
+//       if (op.attributes && op.attributes.style) {
+//         currentHtml = `<span style="${op.attributes.style}">${currentHtml}</span>`;
+//       }
+
+//       // Apply prioritized HTML tags
+//       let hasMatchingTag = false;
+//       for (const tag of prioritizedTags) {
+//         if (op.attributes && op.attributes[tag]) {
+//           currentHtml = `<${tag}>${currentHtml}`;
+//           openTags.push(tag);
+//           hasMatchingTag = true;
+//         }
+//       }
+
+//       // Close any open tags that don't have a matching attribute
+//       if (openTags.length > 0 && !hasMatchingTag) {
+//         for (const tag of openTags.reverse()) {
+//           currentHtml = `</${tag}>${currentHtml}`;
+//         }
+//         openTags.length = 0;
+//       }
+
+//       // Handle newline character
+//       if (op.insert === "\n") {
+//         // Close all open tags
+//         for (const tag of openTags.reverse()) {
+//           currentHtml += `</${tag}>`;
+//         }
+//         openTags.length = 0;
+//         currentHtml += "<br>";
+//       }
+
+//       html += currentHtml;
+//     } else if (op.delete) {
+//       html += `<del>${op.delete}</del>`;
+//     }
+//   });
+
+//   // Close any remaining open tags
+//   for (const tag of openTags.reverse()) {
+//     html += `</${tag}>`;
+//   }
+
+//   return html;
+// }
 
 export function deltaoHtml(data: Delta): string {
   let html = "";

@@ -39,28 +39,41 @@ const initialState: PdfGenState = {
       content: {
         ops: [
           {
-            insert: "Heading",
+            insert: "H",
             attributes: {
               style: "font-size: 32px; color: black;",
+              H1: true,
+            },
+          },
+          {
+            insert: "eadi",
+            attributes: {
+              style: "color: rgb(244, 78, 59);",
               H1: true,
               B: true,
               I: true,
             },
           },
           {
-            insert: " 1",
+            insert: "ng 1",
             attributes: {
               style: "font-size: 32px; color: black;",
               H1: true,
             },
           },
           {
+            insert: "Blue baion",
+            attributes: {
+              style: "color: rgb(0, 156, 224);",
+            },
+          },
+          {
             insert: "\n",
           },
           {
-            insert: "Blue color",
+            insert: "Red baion",
             attributes: {
-              style: "color: rgb(115, 216, 255);",
+              style: "color: rgb(244, 78, 59);",
             },
           },
         ],

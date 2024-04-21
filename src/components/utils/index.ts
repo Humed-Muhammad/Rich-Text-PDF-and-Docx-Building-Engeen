@@ -484,3 +484,12 @@ export const styleAlignmentUsingExeCommand = ({
     document.execCommand(alignmentValue[alignment], false, "");
   }
 };
+
+export function hasCommonElements(arr1: string[], arr2: string[]): boolean {
+  for (const item of arr2) {
+    if (arr1.includes(item)) {
+      return true;
+    }
+  }
+  return false;
+}

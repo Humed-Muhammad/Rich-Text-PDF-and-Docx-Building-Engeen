@@ -42,8 +42,9 @@ export const Sheet = ({
   }, [contentRef.current?.innerHTML, id, dispatch]);
 
   useEffect(() => {
-    if (contentRef.current && content)
+    if (contentRef.current && content) {
       contentRef.current.innerHTML = deltaToHtml(content);
+    }
   }, []);
 
   return (
