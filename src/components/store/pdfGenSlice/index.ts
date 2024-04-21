@@ -62,6 +62,27 @@ const initialState: PdfGenState = {
             },
           },
           {
+            insert: "Heading 2",
+            attributes: {
+              style: "font-size: 28px; color: black;",
+              H2: true,
+            },
+          },
+          {
+            insert: "Blue Heading 2",
+            attributes: {
+              style: "font-size: 28px; color: black;",
+              H2: true,
+            },
+          },
+          {
+            insert: "\n",
+          },
+          {
+            insert: "I can do this",
+            attributes: {},
+          },
+          {
             insert: "Blue baion",
             attributes: {
               style: "color: rgb(0, 156, 224);",

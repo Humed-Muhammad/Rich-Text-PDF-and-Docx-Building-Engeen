@@ -95,22 +95,23 @@ export function deltaToHtml(delta: Delta): string {
   let html = "";
   // let currentCellIndex = 0;
 
+  let parentTag = "";
   delta.ops.forEach((op, index) => {
     //Inserts
-    const prevInsert = delta.ops[index - 1]?.insert;
-    const currentInsert = delta.ops[index]?.insert;
+    // const prevInsert = delta.ops[index - 1]?.insert;
+    // const currentInsert = delta.ops[index]?.insert;
     const nextInsert = delta.ops[index + 1]?.insert;
-    const parentTag = "";
     //@Attrs
     const prevAttrs = Object.keys(delta.ops[index - 1]?.attributes ?? {});
     const currentAttrs = Object.keys(delta.ops[index]?.attributes ?? {});
-    const futureAttrs = Object.keys(delta.ops[index + 1]?.attributes ?? {});
+    // const futureAttrs = Object.keys(delta.ops[index + 1]?.attributes ?? {});
     if (op.insert) {
       if (
         op.insert === "\n" &&
         !hasCommonElements(prevAttrs, headingNodeName)
       ) {
         html += "<br>";
+        parentTag = "";
       } else if (op.attributes && op.attributes.table) {
         html += "<table>";
       } else if (op.attributes && op.attributes.row) {
@@ -136,30 +137,30 @@ export function deltaToHtml(delta: Delta): string {
 
         if (op.attributes) {
           const styleAttribute = op.attributes?.[`style`];
-          // if (op.attributes.DIV) {
-          //   html += `<div style="${op.attributes?.[`DIV-style`] ?? ""}">`;
-          // }
-          // if (op.attributes.SPAN) {
-          //   html += `<span style="${op.attributes?.[`SPAN-style`] ?? ""}">`;
-          // }
 
-          if (op.attributes.H1 && nextInsert !== "\n") {
+          if (op.attributes.H1 && parentTag !== "h1") {
             html += `<h1 style="${styleAttribute}">`;
+            parentTag = "h1";
           }
-          if (op.attributes.H2) {
+          if (op.attributes.H2 && parentTag !== "h2") {
             html += `<h2 style="${styleAttribute}">`;
+            parentTag = "h2";
           }
-          if (op.attributes.H3) {
+          if (op.attributes.H3 && parentTag !== "h3") {
             html += `<h3 style="${styleAttribute}">`;
+            parentTag = "h3";
           }
-          if (op.attributes.H4) {
+          if (op.attributes.H4 && parentTag !== "h4") {
             html += `<h4 style="${styleAttribute}">`;
+            parentTag = "h4";
           }
-          if (op.attributes.H5) {
+          if (op.attributes.H5 && parentTag !== "h5") {
             html += `<h5 style="${styleAttribute}">`;
+            parentTag = "h5";
           }
-          if (op.attributes.H6) {
+          if (op.attributes.H6 && parentTag !== "h6") {
             html += `<h6 style="${styleAttribute}">`;
+            parentTag = "h6";
           }
           if (op.attributes.P) {
             html += `<p style="${styleAttribute}">`;
@@ -185,12 +186,33 @@ export function deltaToHtml(delta: Delta): string {
           html += "</span>";
         }
         if (op.attributes) {
-          // if (op.attributes.DIV) {
-          //   html += `</div>`;
-          // }
-          // if (op.attributes.SPAN) {
-          //   html += `</span>`;
-          // }
+          if (op.attributes.H1 && nextInsert === "\n") {
+            html += "</h1>";
+            parentTag = "";
+          }
+          if (op.attributes.H2 && nextInsert === "\n") {
+            html += "</h2>";
+            parentTag = "";
+          }
+          if (op.attributes.H3 && nextInsert === "\n") {
+            html += "</h3>";
+            parentTag = "";
+          }
+          if (op.attributes.H4 && nextInsert === "\n") {
+            html += "</h4>";
+            parentTag = "";
+          }
+          if (op.attributes.H5 && nextInsert === "\n") {
+            html += "</h5>";
+            parentTag = "";
+          }
+          if (op.attributes.H6 && nextInsert === "\n") {
+            html += "</h6>";
+            parentTag = "";
+          }
+          if (op.attributes.P) {
+            html += "</p>";
+          }
           if (op.attributes.U) {
             html += "</u>";
           }
@@ -199,27 +221,6 @@ export function deltaToHtml(delta: Delta): string {
           }
           if (op.attributes.B) {
             html += "</b>";
-          }
-          if (op.attributes.H1 && op.insert !== "\n") {
-            html += "</h1>";
-          }
-          if (op.attributes.H2) {
-            html += "</h2>";
-          }
-          if (op.attributes.H3) {
-            html += "</h3>";
-          }
-          if (op.attributes.H4) {
-            html += "</h4>";
-          }
-          if (op.attributes.H5) {
-            html += "</h5>";
-          }
-          if (op.attributes.H6) {
-            html += "</h6>";
-          }
-          if (op.attributes.P) {
-            html += "</p>";
           }
         }
       }
@@ -230,126 +231,6 @@ export function deltaToHtml(delta: Delta): string {
 
   return html;
 }
-
-// export function deltaToHtml(delta: Delta): string {
-//   let html = "";
-//   const prioritizedTags = ["H1", "H2", "H3", "H4", "H5", "H6", "B", "I", "U"];
-//   const openTags: string[] = [];
-//   const parentTag = "";
-
-//   delta.ops.forEach((op, index) => {
-//     if (op.insert) {
-//       let currentHtml = op.insert;
-
-//       // Apply inline styles
-//       if (op.attributes && op.attributes.style) {
-//         currentHtml = `<span style="${op.attributes.style}">${currentHtml}</span>`;
-//       }
-
-//       // Apply prioritized HTML tags
-//       let hasMatchingTag = false;
-//       for (const tag of prioritizedTags) {
-//         if (op.attributes && op.attributes[tag]) {
-//           currentHtml = `<${tag}>${currentHtml}`;
-//           openTags.push(tag);
-//           hasMatchingTag = true;
-//         }
-//       }
-
-//       // Close any open tags that don't have a matching attribute
-//       if (openTags.length > 0 && !hasMatchingTag) {
-//         for (const tag of openTags.reverse()) {
-//           currentHtml = `</${tag}>${currentHtml}`;
-//         }
-//         openTags.length = 0;
-//       }
-
-//       // Handle newline character
-//       if (op.insert === "\n") {
-//         // Close all open tags
-//         for (const tag of openTags.reverse()) {
-//           currentHtml += `</${tag}>`;
-//         }
-//         openTags.length = 0;
-//         currentHtml += "<br>";
-//       }
-
-//       html += currentHtml;
-//     } else if (op.delete) {
-//       html += `<del>${op.delete}</del>`;
-//     }
-//   });
-
-//   // Close any remaining open tags
-//   for (const tag of openTags.reverse()) {
-//     html += `</${tag}>`;
-//   }
-
-//   return html;
-// }
-
-export function deltaoHtml(data: Delta): string {
-  let html = "";
-  const tags = ["H1", "H2", "H3", "H4", "H5", "H6", "B", "I", "U"];
-  console.log("first");
-  for (const { insert, attributes } of data.ops) {
-    let tag = "span";
-    const styles: string[] = [];
-
-    if (attributes) {
-      const matchingTags = tags.filter((t) => attributes[t]);
-      if (matchingTags.length > 0) {
-        tag = matchingTags[0];
-      }
-      if (attributes.style) {
-        styles.push(attributes.style);
-      }
-    }
-
-    const openingTag = `<${tag} style="${styles.join(" ")}">`;
-    const closingTag = `</${tag}>`;
-
-    html += openingTag + insert + closingTag;
-  }
-
-  return html;
-}
-
-// function parseTableToDelta(table: HTMLTableElement): any {
-//   const delta: any = { ops: [] };
-
-//   // Add new line before table
-//   delta.ops.push({ insert: "\n" });
-
-//   // Add table start marker
-//   delta.ops.push({ insert: { table: null }, attributes: { table: true } });
-
-//   // Iterate over each row in the table
-//   const rows = Array.from(table.querySelectorAll("tr"));
-//   rows.forEach((row) => {
-//     // Add new line before each row
-//     delta.ops.push({ insert: "\n" });
-//     // Add row marker
-//     delta.ops.push({ insert: { row: null }, attributes: { row: true } });
-
-//     // Iterate over each cell in the row
-//     const cells = Array.from(row.querySelectorAll("td, th"));
-//     cells.forEach((cell) => {
-//       // Add new line before each cell
-//       delta.ops.push({ insert: "\n" });
-//       // Add cell marker
-//       delta.ops.push({ insert: { cell: null }, attributes: { cell: true } });
-
-//       // Add cell content
-//       delta.ops.push({ insert: cell.innerText.trim() });
-//     });
-//   });
-
-//   // Add new line at the end of the table
-//   delta.ops.push({ insert: "\n" });
-
-//   return delta;
-// }
 
 function parseTableToDelta(table: HTMLTableElement) {
   const delta: { ops: Array<{ insert: object; attributes: object }> } = {
