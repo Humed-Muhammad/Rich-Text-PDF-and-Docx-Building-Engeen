@@ -11,7 +11,7 @@ import {
 import { handleKeyCombination } from "./utils";
 import "../index.css";
 import "../styles/index.css";
-import { htmlToDelta } from "@/lib/utils";
+import { deltaToHtml, htmlToDelta } from "@/lib/utils";
 import { useCallback, useEffect, useRef } from "react";
 
 export const Sheet = ({
@@ -42,7 +42,8 @@ export const Sheet = ({
   }, [contentRef.current?.innerHTML, id, dispatch]);
 
   useEffect(() => {
-    if (contentRef.current && content) contentRef.current.innerHTML = content;
+    if (contentRef.current && content)
+      contentRef.current.innerHTML = deltaToHtml(content);
   }, []);
 
   return (

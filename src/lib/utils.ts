@@ -110,56 +110,53 @@ export function deltaToHtml(delta: Delta): string {
         html += `<td ${styleAttribute}>${op.attributes.content ?? ""}</td>`;
         // currentCellIndex++;
       } else {
-        if (typeof op.insert === "string") {
-          html += `<span style="${op.attributes?.style ?? ""}">`;
+        if (!op.attributes) {
+          html += `<span>`;
         }
 
         if (op.attributes) {
+          const styleAttribute = op.attributes?.[`style`];
           // if (op.attributes.DIV) {
           //   html += `<div style="${op.attributes?.[`DIV-style`] ?? ""}">`;
           // }
           // if (op.attributes.SPAN) {
           //   html += `<span style="${op.attributes?.[`SPAN-style`] ?? ""}">`;
           // }
-          if (op.attributes && op.attributes.B) {
-            // const styleAttribute = op.attributes?.[`B-style`]
-            //   ? `style="${op.attributes?.[`B-style`]}"`
-            //   : "";
-
-            html += `<b>`;
+          if (op.attributes.B) {
+            html += `<b style="${styleAttribute}">`;
           }
           if (op.attributes.I) {
-            html += `<i>`;
+            html += `<i style="${styleAttribute}">`;
           }
           if (op.attributes.U) {
-            html += `<u>`;
+            html += `<u style="${styleAttribute}">`;
           }
           if (op.attributes.H1) {
-            html += `<h1>`;
+            html += `<h1 style="${styleAttribute}">`;
           }
 
           if (op.attributes.H2) {
-            html += `<h2>`;
+            html += `<h2 style="${styleAttribute}">`;
           }
           if (op.attributes.H3) {
-            html += `<h3>`;
+            html += `<h3 style="${styleAttribute}">`;
           }
           if (op.attributes.H4) {
-            html += `<h4>`;
+            html += `<h4 style="${styleAttribute}">`;
           }
           if (op.attributes.H5) {
-            html += `<h5>`;
+            html += `<h5 style="${styleAttribute}">`;
           }
           if (op.attributes.H6) {
-            html += `<h6>`;
+            html += `<h6 style="${styleAttribute}">`;
           }
           if (op.attributes.P) {
-            html += `<p>`;
+            html += `<p style="${styleAttribute}">`;
           }
         }
 
         html += op.insert;
-        if (typeof op.insert === "string") {
+        if (op.insert && !op?.attributes) {
           html += "</span>";
         }
         if (op.attributes) {
@@ -205,6 +202,33 @@ export function deltaToHtml(delta: Delta): string {
       html += `<del>${op.delete}</del>`;
     }
   });
+
+  return html;
+}
+
+export function deltaoHtml(data: Delta): string {
+  let html = "";
+  const tags = ["H1", "H2", "H3", "H4", "H5", "H6", "B", "I", "U"];
+  console.log("first");
+  for (const { insert, attributes } of data.ops) {
+    let tag = "span";
+    const styles: string[] = [];
+
+    if (attributes) {
+      const matchingTags = tags.filter((t) => attributes[t]);
+      if (matchingTags.length > 0) {
+        tag = matchingTags[0];
+      }
+      if (attributes.style) {
+        styles.push(attributes.style);
+      }
+    }
+
+    const openingTag = `<${tag} style="${styles.join(" ")}">`;
+    const closingTag = `</${tag}>`;
+
+    html += openingTag + insert + closingTag;
+  }
 
   return html;
 }

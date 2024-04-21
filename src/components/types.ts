@@ -12,7 +12,7 @@ import { StyleUpdater } from "./utils/hooks/useSelectionStyle";
 
 export type EditableContentArea = {
   contentRef?: HTMLDivElement | null | undefined;
-  content?: string;
+  content?: Delta;
 };
 
 export interface WritingAreaOptions extends EditableContentArea {

@@ -39,15 +39,28 @@ const initialState: PdfGenState = {
       content: {
         ops: [
           {
-            insert: "humed and the blue ",
+            insert: "Heading",
+            attributes: {
+              style: "font-size: 32px; color: black;",
+              H1: true,
+              B: true,
+              I: true,
+            },
+          },
+          {
+            insert: " 1",
+            attributes: {
+              style: "font-size: 32px; color: black;",
+              H1: true,
+            },
           },
           {
             insert: "\n",
           },
           {
-            insert: "okk hjgjhg",
+            insert: "Blue color",
             attributes: {
-              B: true,
+              style: "color: rgb(115, 216, 255);",
             },
           },
         ],
