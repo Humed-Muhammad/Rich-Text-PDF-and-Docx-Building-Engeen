@@ -1,6 +1,6 @@
-import { WritingAreaOptions } from "./types";
+import { HeadingType, WritingAreaOptions } from "./types";
 
-import { eventKeys } from "./utils/constants";
+import { eventKeys, headingNodeName } from "./utils/constants";
 import { useGetFocusedElement } from "./utils/hooks/useGetFocusedElement";
 import { useAppDispatch } from "./store/hooks";
 import {
@@ -47,6 +47,11 @@ export const Sheet = ({
     }
   }, []);
 
+  useEffect(() => {
+    if (contentRef.current)
+      console.log(htmlToDelta(contentRef.current?.innerHTML));
+  }, [contentRef.current?.innerHTML]);
+
   return (
     <div
       ref={contentRef}
@@ -58,8 +63,7 @@ export const Sheet = ({
         width: size?.width,
         height: size?.height,
       }}
-      onInput={async (event) => {
-        console.log(htmlToDelta(event.currentTarget.innerHTML));
+      onInput={async () => {
         hideCustomMenu();
         await getFocusedElement(false).then((data) => {
           dispatch(setFocusedData(data));
@@ -76,6 +80,32 @@ export const Sheet = ({
         });
       }}
       onKeyDown={async (event) => {
+        if (event.key === "Enter") {
+          await getFocusedElement(true).then((data) => {
+            if (data.focusedNode && data.range) {
+              let nodeToBeInserted: Node;
+              if (data.focusedNode.nodeName === "#text") {
+                nodeToBeInserted = data.focusedNode.parentElement as Node;
+              } else {
+                nodeToBeInserted = data.focusedNode;
+              }
+              if (
+                headingNodeName.includes(
+                  nodeToBeInserted.nodeName as HeadingType
+                )
+              ) {
+                const div = document.createElement("div");
+                div.appendChild(nodeToBeInserted);
+                data.range.insertNode(div);
+                data.range.setStartBefore(div);
+                data.range.collapse(true);
+                data.selection?.removeAllRanges();
+                data.selection?.addRange(data.range);
+              }
+            }
+          });
+        }
+
         if (eventKeys.includes(event.key)) {
           hideCustomMenu();
           await getFocusedElement(true).then((data) => {
