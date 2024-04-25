@@ -15,12 +15,20 @@ export type EditableContentArea = {
   content?: Delta;
 };
 
+export type Size = { width: number | string; height: number | string };
 export interface WritingAreaOptions extends EditableContentArea {
-  size?: { width: number | string; height: number | string };
+  size?: Size;
   changeTextStyle: ReturnType<typeof useTextStyleChange>;
   hideCustomMenu: () => void;
   updateStyle: StyleUpdater;
   id?: string;
+}
+
+export interface SheetProps {
+  size: Size;
+  customCommand: () => void;
+  id: string | undefined;
+  content: Delta | undefined;
 }
 
 export type HeadingType = "H1" | "H2" | "H3" | "H4" | "H5" | "H6" | "P";

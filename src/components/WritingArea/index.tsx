@@ -23,12 +23,9 @@ export const WritingArea = ({
         {allPaperRefs?.map((paperRef) => (
           <Sheet
             id={paperRef.id}
-            changeTextStyle={changeTextStyle}
-            hideCustomMenu={hideCustomMenu}
+            customCommand={hideCustomMenu}
             size={size}
-            updateStyle={updateStyle}
             key={paperRef.id}
-            // paperRef={paperRef.ref}
             content={paperRef.content}
           />
         ))}
