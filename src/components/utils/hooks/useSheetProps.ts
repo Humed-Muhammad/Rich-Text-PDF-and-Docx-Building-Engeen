@@ -19,7 +19,7 @@ export const useSheetProps = ({
 }: SheetProps) => {
   const contentRef = useRef<HTMLDivElement>(null);
   const dispatch = useAppDispatch();
-  const { getFocusedElement } = useGetFocusedElement();
+  const { getFocusedElement } = useGetFocusedElement(contentRef);
 
   const handleEditorClick = useCallback(() => {
     contentRef?.current?.focus();

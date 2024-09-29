@@ -153,10 +153,12 @@ const useSelectionStyle = (): StyleUpdater => {
   );
 
   useEffect(() => {
-    document.addEventListener("selectionchange", getFocusedElement);
+    document.addEventListener("selectionchange", () => getFocusedElement());
 
     return () => {
-      document.removeEventListener("selectionchange", getFocusedElement);
+      document.removeEventListener("selectionchange", () =>
+        getFocusedElement()
+      );
     };
   }, [getFocusedElement]);
 

@@ -6,7 +6,9 @@ import { useNodeTraverse } from "./useNodeTraverse";
 import { useSpan } from "./useSpan";
 
 // /* The `getFocusedElement` function is a callback function that is used to get the currently focused
-export const useGetFocusedElement = () => {
+export const useGetFocusedElement = (
+  contentRef?: React.RefObject<HTMLDivElement>
+) => {
   const { setTextProperties } = useGetTextProperties();
   const { traverseTreeByNodeName, traverseTreeByCSSProperties } =
     useNodeTraverse();
@@ -35,7 +37,12 @@ export const useGetFocusedElement = () => {
           setTimeout(async () => {
             const selection = document.getSelection();
 
-            if (selection && selection.rangeCount > 0) {
+            if (
+              selection &&
+              selection.rangeCount > 0 &&
+              contentRef?.current &&
+              contentRef?.current.contains(selection.anchorNode)
+            ) {
               const focusedNode = selection.focusNode;
               const range = selection.getRangeAt(0);
               const focusedData = {

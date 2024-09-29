@@ -13,11 +13,15 @@ export const useNodeTraverse = () => {
   );
 
   const traverseTreeByCSSProperties = useCallback(
-    (focusedData: FocusedData, property: keyof React.CSSProperties) =>
-      getParentTreesByCSSProperties({
+    (focusedData: FocusedData, property: keyof React.CSSProperties) => {
+      if (property === "fontSize") {
+        console.log({ focusedData, property });
+      }
+      return getParentTreesByCSSProperties({
         focusedNode: focusedData?.focusedNode,
         property,
-      })[property],
+      })[property];
+    },
     []
   );
 

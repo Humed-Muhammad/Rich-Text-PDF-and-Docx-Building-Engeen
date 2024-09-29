@@ -101,7 +101,9 @@ export function MenuBar({ contentRef }: EditableContentArea) {
                     contentRef,
                     focusedData,
                   });
-                  setTableCreated((prev) => !prev);
+                  setTimeout(() => {
+                    setTableCreated((prev) => !prev);
+                  }, 2000);
                 }}
               >
                 Create

@@ -101,6 +101,72 @@ const initialState: PdfGenState = {
       },
       id: "writingArea-1",
     },
+    {
+      content: {
+        ops: [
+          {
+            insert: "H",
+            attributes: {
+              style: "font-size: 32px; color: black;",
+              H1: true,
+            },
+          },
+          {
+            insert: "eadi",
+            attributes: {
+              style: "color: rgb(244, 78, 59);",
+              H1: true,
+              B: true,
+              I: true,
+            },
+          },
+          {
+            insert: "ng 1",
+            attributes: {
+              style: "font-size: 32px; color: black;",
+              H1: true,
+            },
+          },
+          {
+            insert: "Heading 2",
+            attributes: {
+              style: "font-size: 28px; color: black;",
+              H2: true,
+            },
+          },
+          {
+            insert: "Blue Heading 2",
+            attributes: {
+              style: "font-size: 28px; color: black;",
+              H2: true,
+            },
+          },
+          {
+            insert: "\n",
+          },
+          {
+            insert: "I can do this",
+            attributes: {},
+          },
+          {
+            insert: "Blue baion",
+            attributes: {
+              style: "color: rgb(0, 156, 224);",
+            },
+          },
+          {
+            insert: "\n",
+          },
+          {
+            insert: "Red baion",
+            attributes: {
+              style: "color: rgb(244, 78, 59);",
+            },
+          },
+        ],
+      },
+      id: "writingArea-2",
+    },
   ],
   focusedPaperId: "",
   currentRef: null,

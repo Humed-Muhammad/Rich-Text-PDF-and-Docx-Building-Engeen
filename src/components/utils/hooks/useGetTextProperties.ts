@@ -58,7 +58,7 @@ export const useGetTextProperties = () => {
         traverseTreeByCSSProperties(focusedData, "fontStyle") === "italic";
 
       const fontSize = traverseTreeByCSSProperties?.(focusedData, "fontSize");
-
+      // console.log({ fontSize });
       dispatch(
         setTextStyle({
           bold,
