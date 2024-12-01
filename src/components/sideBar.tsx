@@ -79,7 +79,7 @@ const SideBarComponent = memo((props: SideBarProps) => {
         />
 
         <div className="pdfx-flex pdfx-items-center">
-          <Bold textStyle={textStyle} />
+          <Bold updateStyle={updateStyle} textStyle={textStyle} />
           <Italic textStyle={textStyle} />
           <Underline textStyle={textStyle} />
           <ColorPicker {...props} contentRef={contentRef} />

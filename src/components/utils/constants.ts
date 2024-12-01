@@ -83,11 +83,11 @@ export const HeadingTextStyle: TextStyleType[] = [
 
 export const fontFamily = [
   { label: "Roboto", value: "Roboto, sans-serif" },
-  { label: "Inter", value: "Inter Variable, sans-serif" },
+  { label: "Inter", value: '"Inter Variable", sans-serif' },
   { label: "Poppins", value: "Poppins, sans-serif" },
   { label: "Lato", value: "Lato, sans-serif" },
   { label: "Nunito", value: "Nunito, sans-serif" },
-  { label: "Open-Sans", value: "Open sans Variable, sans-serif" },
+  { label: "Open-Sans", value: '"Open sans Variable, sans-serif"' },
 ];
 
 export type NodeStyle = "bold" | "italic" | "fontSize" | "color" | "fontFamily";

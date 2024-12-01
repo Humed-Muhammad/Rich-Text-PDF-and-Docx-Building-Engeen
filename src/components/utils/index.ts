@@ -12,6 +12,7 @@ import {
 } from "../types";
 import { NodeStyle, inlineElements } from "./constants";
 import { v4 } from "uuid";
+import { convertToCSSProperty } from "./helpers";
 
 /**
  * Retrieves the color properties of the selected element and its root ancestor.
@@ -307,7 +308,7 @@ export const createSpanElement = ({
  * into the selected range within a focused element.
  * @param {UseSpanOptions}  - The `styleTheSelectedRange` function takes in an object with the
  * following properties:
- * @returns An HTMLSpanElement is being returned.
+ * @returns HTMLSpanElement.
  */
 export const styleTheSelectedRange = ({
   focusedData,
@@ -319,18 +320,20 @@ export const styleTheSelectedRange = ({
 
   const span = document.createElement("span");
 
-  if (span) {
+  const promise = new Promise<HTMLSpanElement>((resolve) => {
     if (style) {
       Object.keys(style).forEach((key) => {
         // Type assertion to ensure key is of type keyof CSSStyleDeclaration
-        const styleKey = key as keyof Omit<
-          CSSStyleDeclaration,
-          "length" | "parentRule"
-        >;
-        span.style[styleKey] = style[styleKey] as any;
+        const styleKey = convertToCSSProperty(key);
+        span.style.setProperty(
+          styleKey,
+          `${style[key as keyof CSSStyleDeclaration]}`
+        );
       });
     }
-
+    resolve(span);
+  });
+  promise.then((span) => {
     const extractedContents = range?.extractContents();
     span.appendChild(extractedContents as Node);
     range?.deleteContents();
@@ -338,10 +341,12 @@ export const styleTheSelectedRange = ({
     // Adjust the selection to surround the new span element
     selection?.removeAllRanges();
     selection?.addRange(range as Range);
-    return span;
-  } else {
-    return focusedNode?.parentElement as HTMLElement;
-  }
+    // selection?.collapseToEnd();
+  });
+  return span;
+  // } else {
+  //   return focusedNode?.parentElement as HTMLElement;
+  // }
 };
 
 export const valueTransformer = (

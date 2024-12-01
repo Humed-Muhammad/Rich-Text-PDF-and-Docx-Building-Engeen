@@ -29,10 +29,12 @@ export const useSheetProps = ({
 
   useEffect(() => {
     if (contentRef.current) {
+      const content = htmlToDelta(contentRef.current.innerHTML);
+      // console.log(content);
       dispatch(
         updatePaperRefContent({
           id: id as string,
-          content: htmlToDelta(contentRef.current.innerHTML),
+          content,
         })
       );
     }

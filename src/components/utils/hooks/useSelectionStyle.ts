@@ -5,15 +5,21 @@ import { useGetFocusedElement } from "./useGetFocusedElement";
 import { styleTheSelectedRange } from "..";
 import { useDispatch } from "react-redux";
 import { setFocusedData } from "@/components/store/pdfGenSlice";
+import { useAppSelector } from "@/components/store/hooks";
+import { selectFocusedData } from "@/components/store/pdfGenSlice/selectors";
 
-export type StyleUpdater = (style: Partial<CSSStyleDeclaration>) => void;
+export type StyleUpdater = (
+  style: Partial<CSSStyleDeclaration>,
+  toggle?: boolean
+) => void;
 
 const useSelectionStyle = (): StyleUpdater => {
-  const { focusedData, getFocusedElement } = useGetFocusedElement();
+  const { getFocusedElement } = useGetFocusedElement();
   const dispatch = useDispatch();
+  const focusedData = useAppSelector(selectFocusedData);
 
   const updateStyle = useCallback(
-    (style: Partial<CSSStyleDeclaration>) => {
+    (style: Partial<CSSStyleDeclaration>, toggle?: boolean) => {
       const selection = focusedData?.selection;
 
       if (selection) {
@@ -80,22 +86,33 @@ const useSelectionStyle = (): StyleUpdater => {
             }
             for (const key of Object.keys(style)) {
               const convertedKey = convertToCSSProperty(key);
-
-              element?.style?.setProperty(
-                convertedKey,
-                style[key as keyof CSSStyleDeclaration] as string
-              );
+              const hasProperty =
+                element?.style?.getPropertyValue(convertedKey);
+              if (hasProperty && toggle) {
+                element?.style?.removeProperty(convertedKey);
+              } else {
+                element?.style?.setProperty(
+                  convertedKey,
+                  style[key as keyof CSSStyleDeclaration] as string
+                );
+              }
 
               if (element.childNodes.length > 0) {
-                element.childNodes.forEach((node) => {
-                  const convertedKey = convertToCSSProperty(key);
-
-                  //@ts-ignore
-                  node?.style?.setProperty(
-                    convertedKey,
-                    style[key as keyof CSSStyleDeclaration] as string
-                  );
-                });
+                (element.childNodes as NodeListOf<HTMLElement>).forEach(
+                  (node) => {
+                    const convertedKey = convertToCSSProperty(key);
+                    const hasProperty =
+                      node?.style?.getPropertyValue(convertedKey);
+                    if (hasProperty && toggle) {
+                      node?.style?.removeProperty(convertedKey);
+                    } else {
+                      node?.style?.setProperty(
+                        convertedKey,
+                        style[key as keyof CSSStyleDeclaration] as string
+                      );
+                    }
+                  }
+                );
               }
             }
           }
@@ -105,26 +122,36 @@ const useSelectionStyle = (): StyleUpdater => {
             const convertedKey = convertToCSSProperty(key);
 
             if (parentElement?.textContent === focusedData?.range?.toString()) {
-              element?.style?.setProperty(
-                convertedKey,
-                style[key as keyof CSSStyleDeclaration] as string
-              );
-            } else {
-              if (
-                parentElement?.parentElement?.textContent ===
-                focusedData?.range?.toString()
-              ) {
+              const hasProperty =
+                element?.style?.getPropertyValue(convertedKey);
+              if (hasProperty && toggle) {
+                element?.style?.removeProperty(convertedKey);
+              } else {
                 element?.style?.setProperty(
                   convertedKey,
                   style[key as keyof CSSStyleDeclaration] as string
                 );
               }
+            } else {
+              if (
+                parentElement?.parentElement?.textContent ===
+                focusedData?.range?.toString()
+              ) {
+                const hasProperty =
+                  element?.style?.getPropertyValue(convertedKey);
+                if (hasProperty && toggle) {
+                  element?.style?.removeProperty(convertedKey);
+                } else {
+                  element?.style?.setProperty(
+                    convertedKey,
+                    style[key as keyof CSSStyleDeclaration] as string
+                  );
+                }
+              }
               const createdELement = styleTheSelectedRange({
                 focusedData,
                 style: {
-                  [convertedKey]: style[
-                    key as keyof CSSStyleDeclaration
-                  ] as string,
+                  [key]: style[key as keyof CSSStyleDeclaration] as string,
                   fontSize: "inherit",
                 },
               });
@@ -135,15 +162,22 @@ const useSelectionStyle = (): StyleUpdater => {
             }
 
             if (element.childNodes.length > 0) {
-              element.childNodes.forEach((node) => {
-                const convertedKey = convertToCSSProperty(key);
-
-                //@ts-ignore
-                node?.style?.setProperty(
-                  convertedKey,
-                  style[key as keyof CSSStyleDeclaration] as string
-                );
-              });
+              (element.childNodes as NodeListOf<HTMLElement>).forEach(
+                (node) => {
+                  const convertedKey = convertToCSSProperty(key);
+                  const hasProperty =
+                    node?.style?.getPropertyValue(convertedKey);
+                  if (hasProperty && toggle) {
+                    node?.style?.removeProperty(convertedKey);
+                  } else {
+                    //@ts-ignore
+                    node?.style?.setProperty(
+                      convertedKey,
+                      style[key as keyof CSSStyleDeclaration] as string
+                    );
+                  }
+                }
+              );
             }
           }
         }
