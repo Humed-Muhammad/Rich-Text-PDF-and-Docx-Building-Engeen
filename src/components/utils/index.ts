@@ -341,7 +341,7 @@ export const styleTheSelectedRange = ({
     // Adjust the selection to surround the new span element
     selection?.removeAllRanges();
     selection?.addRange(range as Range);
-    // selection?.collapseToEnd();
+    selection?.collapseToEnd();
   });
   return span;
   // } else {

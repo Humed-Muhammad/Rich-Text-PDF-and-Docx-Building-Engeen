@@ -51,7 +51,9 @@ export const useGetTextProperties = () => {
         traverseTreeByCSSProperties(focusedData, "fontStyle") === "underline";
       const bold =
         traverseTreeByNodeName(focusedData, "B").some((node) => node === "B") ||
-        traverseTreeByCSSProperties(focusedData, "fontWeight") === "bolder";
+        ["bold", "bolder", "semi-bold"].includes(
+          traverseTreeByCSSProperties(focusedData, "fontWeight") as string
+        );
 
       const italic =
         traverseTreeByNodeName(focusedData, "I").some((node) => node === "I") ||

@@ -17,7 +17,7 @@ export const useGetFocusedElement = (
   const { createElement } = useSpan();
   const dispatch = useAppDispatch();
 
-  const createSpanElementAndListenToFocus = async (
+  const createSpanElementAndListenToFocus = (
     focusedData: FocusedData,
     onKeyDown?: boolean
   ) => {
@@ -55,7 +55,7 @@ export const useGetFocusedElement = (
               };
               setFocusedData(focusedData);
               dispatch(sliceSetFocusedData(focusedData));
-              await createSpanElementAndListenToFocus(focusedData, keyDown);
+              createSpanElementAndListenToFocus(focusedData, keyDown);
               resolve({
                 focusedNode,
                 selection,
