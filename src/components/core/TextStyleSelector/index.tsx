@@ -14,12 +14,12 @@ import { EditableContentArea } from "@/components/types";
 interface Props extends EditableContentArea {
   value: string;
   options: Array<TextStyleType>;
-  onSelect: (value: string) => void;
+  onSelect: (value: Partial<CSSStyleDeclaration> | string) => void;
   label: string;
 }
 export function TextStyleSelector({ value, options, onSelect, label }: Props) {
   return (
-    <Select onValueChange={onSelect} value={value}>
+    <Select onValueChange={(value) => onSelect(value)} value={value}>
       <SelectTrigger className="w-[180px] bg-white mx-1 focus:ring-0 border border-gray-200">
         <SelectValue placeholder="Select a Style" />
       </SelectTrigger>
@@ -27,7 +27,7 @@ export function TextStyleSelector({ value, options, onSelect, label }: Props) {
         <SelectGroup>
           <SelectLabel>{label}</SelectLabel>
           {options.map(({ label, value }) => (
-            <SelectItem key={value} value={value}>
+            <SelectItem key={label} value={value as string}>
               {label}
             </SelectItem>
           ))}

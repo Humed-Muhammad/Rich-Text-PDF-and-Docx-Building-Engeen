@@ -27,24 +27,26 @@ const SideBarComponent = memo((props: SideBarProps) => {
 
   const dispatch = useAppDispatch();
 
-  const getLabel = useMemo(
-    () => (options: TextStyleType[], value: string) => {
-      const keyValue = options.find((option) => option.value === value);
-      return keyValue;
-    },
-    []
-  );
+  // const getLabel = useMemo(
+  //   () => (options: TextStyleType[], value: HeadingTextStyleValue) => {
+  //     const keyValue = options.find((option) => option.value === value);
+  //     return keyValue;
+  //   },
+  //   []
+  // );
 
-  const onHeadingSelect = (value: string) => {
-    const headingValue = getLabel(HeadingTextStyle, value) as TextStyleType;
-    dispatch(setTextStyle({ ...textStyle, heading: headingValue }));
-    changeTextStyle(headingValue);
+  const onHeadingSelect = (value: Partial<CSSStyleDeclaration>) => {
+    // const headingValue = getLabel(HeadingTextStyle, value) as TextStyleType;
+    // dispatch(setTextStyle({ ...textStyle, heading: headingValue }));
+    // console.log(value, label);
+    updateStyle({
+      ...value,
+    });
   };
 
-  const onFontFamilySelect = (value: string) => {
-    const fontFamilyValue = getLabel(fontFamily, value) as TextStyleType;
+  const onFontFamilySelect = (value: string | Partial<CSSStyleDeclaration>) => {
     updateStyle({
-      fontFamily: fontFamilyValue?.value,
+      fontFamily: value as string,
     });
   };
 

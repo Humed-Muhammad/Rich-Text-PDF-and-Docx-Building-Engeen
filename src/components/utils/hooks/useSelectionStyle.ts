@@ -22,6 +22,8 @@ const useSelectionStyle = (): StyleUpdater => {
     (style: Partial<CSSStyleDeclaration>, toggle?: boolean) => {
       const selection = focusedData?.selection;
 
+      console.log(style);
+
       if (selection) {
         const parentElement = focusedData?.focusedNode?.parentElement;
         const selectedRange = selection.getRangeAt(0);

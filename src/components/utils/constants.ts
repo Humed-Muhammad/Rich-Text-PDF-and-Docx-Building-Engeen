@@ -67,18 +67,54 @@ export const inlineElements = [
 ];
 
 export interface TextStyleType {
-  value: string;
+  value: Partial<CSSStyleDeclaration> | string;
   label: string;
 }
 
 export const HeadingTextStyle: TextStyleType[] = [
-  { label: "Normal Text", value: "P" },
-  { label: "Heading 1", value: "H1" },
-  { label: "Heading 2", value: "H2" },
-  { label: "Heading 3", value: "H3" },
-  { label: "Heading 4", value: "H4" },
-  { label: "Heading 5", value: "H5" },
-  { label: "Heading 6", value: "H6" },
+  { label: "Normal Text", value: { fontSize: "16px", fontWeight: "400" } },
+  {
+    label: "Heading 1",
+    value: {
+      fontSize: "32px",
+      fontWeight: "700",
+    },
+  },
+  {
+    label: "Heading 2",
+    value: {
+      fontSize: "28px",
+      fontWeight: "700",
+    },
+  },
+  {
+    label: "Heading 3",
+    value: {
+      fontSize: "24px",
+      fontWeight: "700",
+    },
+  },
+  {
+    label: "Heading 4",
+    value: {
+      fontSize: "20px",
+      fontWeight: "700",
+    },
+  },
+  {
+    label: "Heading 5",
+    value: {
+      fontSize: "16px",
+      fontWeight: "700",
+    },
+  },
+  {
+    label: "Heading 6",
+    value: {
+      fontSize: "14px",
+      fontWeight: "700",
+    },
+  },
 ];
 
 export const fontFamily = [

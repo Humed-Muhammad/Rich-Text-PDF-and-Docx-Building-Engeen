@@ -124,8 +124,9 @@ export function deltaToHtml(delta: Delta): string {
         html += `<td ${styleAttribute}>${op.attributes.content ?? ""}</td>`;
         // currentCellIndex++;
       } else {
-        if (!op.attributes && op.insert !== "\n") {
+        if (!Object.keys(op.attributes ?? {}).length && op.insert !== "\n") {
           html += `<span>`;
+          // console.log("span", op.insert);
         } else if (
           op.insert &&
           op.attributes?.["style"] &&
@@ -135,94 +136,95 @@ export function deltaToHtml(delta: Delta): string {
           html += `<span style="${style ?? ""}">`;
         }
 
-        if (op.attributes) {
-          const styleAttribute = op.attributes?.[`style`];
+        // if (op.attributes) {
+        //   const styleAttribute = op.attributes?.[`style`];
 
-          if (op.attributes.H1 && parentTag !== "h1") {
-            html += `<h1 style="${styleAttribute}">`;
-            parentTag = "h1";
-          }
-          if (op.attributes.H2 && parentTag !== "h2") {
-            html += `<h2 style="${styleAttribute}">`;
-            parentTag = "h2";
-          }
-          if (op.attributes.H3 && parentTag !== "h3") {
-            html += `<h3 style="${styleAttribute}">`;
-            parentTag = "h3";
-          }
-          if (op.attributes.H4 && parentTag !== "h4") {
-            html += `<h4 style="${styleAttribute}">`;
-            parentTag = "h4";
-          }
-          if (op.attributes.H5 && parentTag !== "h5") {
-            html += `<h5 style="${styleAttribute}">`;
-            parentTag = "h5";
-          }
-          if (op.attributes.H6 && parentTag !== "h6") {
-            html += `<h6 style="${styleAttribute}">`;
-            parentTag = "h6";
-          }
-          if (op.attributes.P) {
-            html += `<p style="${styleAttribute}">`;
-          }
-          if (op.attributes.B) {
-            html += `<b style="${styleAttribute}">`;
-          }
-          if (op.attributes.I) {
-            html += `<i style="${styleAttribute}">`;
-          }
-          if (op.attributes.U) {
-            html += `<u style="${styleAttribute}">`;
-          }
-        }
+        //   if (op.attributes.H1 && parentTag !== "h1") {
+        //     html += `<h1 style="${styleAttribute}">`;
+        //     parentTag = "h1";
+        //   }
+        //   if (op.attributes.H2 && parentTag !== "h2") {
+        //     html += `<h2 style="${styleAttribute}">`;
+        //     parentTag = "h2";
+        //   }
+        //   if (op.attributes.H3 && parentTag !== "h3") {
+        //     html += `<h3 style="${styleAttribute}">`;
+        //     parentTag = "h3";
+        //   }
+        //   if (op.attributes.H4 && parentTag !== "h4") {
+        //     html += `<h4 style="${styleAttribute}">`;
+        //     parentTag = "h4";
+        //   }
+        //   if (op.attributes.H5 && parentTag !== "h5") {
+        //     html += `<h5 style="${styleAttribute}">`;
+        //     parentTag = "h5";
+        //   }
+        //   if (op.attributes.H6 && parentTag !== "h6") {
+        //     html += `<h6 style="${styleAttribute}">`;
+        //     parentTag = "h6";
+        //   }
+        //   if (op.attributes.P) {
+        //     html += `<p style="${styleAttribute}">`;
+        //   }
+        //   if (op.attributes.B) {
+        //     html += `<b style="${styleAttribute}">`;
+        //   }
+        //   if (op.attributes.I) {
+        //     html += `<i style="${styleAttribute}">`;
+        //   }
+        //   if (op.attributes.U) {
+        //     html += `<u style="${styleAttribute}">`;
+        //   }
+        // }
 
         html += op.insert;
         if (
-          (op.insert && !op?.attributes) ||
+          (op.insert && !Object.keys(op?.attributes ?? {}).length) ||
           (op.insert &&
             op.attributes?.["style"] &&
             !hasCommonElements(currentAttrs, headingNodeName))
         ) {
+          // console.log("second", op.insert);
           html += "</span>";
         }
-        if (op.attributes) {
-          if (op.attributes.H1 && nextInsert === "\n") {
-            html += "</h1>";
-            parentTag = "";
-          }
-          if (op.attributes.H2 && nextInsert === "\n") {
-            html += "</h2>";
-            parentTag = "";
-          }
-          if (op.attributes.H3 && nextInsert === "\n") {
-            html += "</h3>";
-            parentTag = "";
-          }
-          if (op.attributes.H4 && nextInsert === "\n") {
-            html += "</h4>";
-            parentTag = "";
-          }
-          if (op.attributes.H5 && nextInsert === "\n") {
-            html += "</h5>";
-            parentTag = "";
-          }
-          if (op.attributes.H6 && nextInsert === "\n") {
-            html += "</h6>";
-            parentTag = "";
-          }
-          if (op.attributes.P) {
-            html += "</p>";
-          }
-          if (op.attributes.U) {
-            html += "</u>";
-          }
-          if (op.attributes.I) {
-            html += "</i>";
-          }
-          if (op.attributes.B) {
-            html += "</b>";
-          }
-        }
+        // if (op.attributes) {
+        //   if (op.attributes.H1 && nextInsert === "\n") {
+        //     html += "</h1>";
+        //     parentTag = "";
+        //   }
+        //   if (op.attributes.H2 && nextInsert === "\n") {
+        //     html += "</h2>";
+        //     parentTag = "";
+        //   }
+        //   if (op.attributes.H3 && nextInsert === "\n") {
+        //     html += "</h3>";
+        //     parentTag = "";
+        //   }
+        //   if (op.attributes.H4 && nextInsert === "\n") {
+        //     html += "</h4>";
+        //     parentTag = "";
+        //   }
+        //   if (op.attributes.H5 && nextInsert === "\n") {
+        //     html += "</h5>";
+        //     parentTag = "";
+        //   }
+        //   if (op.attributes.H6 && nextInsert === "\n") {
+        //     html += "</h6>";
+        //     parentTag = "";
+        //   }
+        //   if (op.attributes.P) {
+        //     html += "</p>";
+        //   }
+        //   if (op.attributes.U) {
+        //     html += "</u>";
+        //   }
+        //   if (op.attributes.I) {
+        //     html += "</i>";
+        //   }
+        //   if (op.attributes.B) {
+        //     html += "</b>";
+        //   }
+        // }
       }
     } else if (op.delete) {
       html += `<del>${op.delete}</del>`;
