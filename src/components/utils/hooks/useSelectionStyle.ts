@@ -3,10 +3,7 @@ import { useEffect, useCallback } from "react";
 import { convertToCSSProperty } from "../helpers";
 import { useGetFocusedElement } from "./useGetFocusedElement";
 import { styleTheSelectedRange } from "..";
-import { useDispatch } from "react-redux";
-import { setFocusedData } from "@/components/store/pdfGenSlice";
-import { useAppSelector } from "@/components/store/hooks";
-import { selectFocusedData } from "@/components/store/pdfGenSlice/selectors";
+import { usePdfXContext } from "./usePdfXContext";
 
 export type StyleUpdater = (
   style: Partial<CSSStyleDeclaration>,
@@ -15,8 +12,7 @@ export type StyleUpdater = (
 
 const useSelectionStyle = (): StyleUpdater => {
   const { getFocusedElement } = useGetFocusedElement();
-  const dispatch = useDispatch();
-  const focusedData = useAppSelector(selectFocusedData);
+  const { setFocusedData, focusedData } = usePdfXContext();
 
   const updateStyle = useCallback(
     (style: Partial<CSSStyleDeclaration>, toggle?: boolean) => {
@@ -158,9 +154,7 @@ const useSelectionStyle = (): StyleUpdater => {
                 },
               });
               // setUpdatedElement(createdELement);
-              dispatch(
-                setFocusedData({ ...focusedData, focusedNode: createdELement })
-              );
+              setFocusedData({ ...focusedData, focusedNode: createdELement });
             }
 
             if (element.childNodes.length > 0) {
@@ -185,7 +179,7 @@ const useSelectionStyle = (): StyleUpdater => {
         }
       }
     },
-    [focusedData, dispatch]
+    [focusedData]
   );
 
   useEffect(() => {

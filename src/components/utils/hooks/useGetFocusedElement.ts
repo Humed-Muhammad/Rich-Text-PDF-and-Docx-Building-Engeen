@@ -1,11 +1,10 @@
 import { FocusedData } from "@/components/types";
-import { Context } from "@/context/contextValue";
-import { useCallback, useContext } from "react";
+import { useCallback } from "react";
 import { useGetTextProperties } from "./useGetTextProperties";
 import { useNodeTraverse } from "./useNodeTraverse";
 import { useSpan } from "./useSpan";
-import { useAppDispatch } from "@/components/store/hooks";
-import { setFocusedData as sliceSetFocusedData } from "@/components/store/pdfGenSlice";
+// import { setFocusedData as sliceSetFocusedData } from "@/components/store/pdfGenSlice";
+import { usePdfXContext } from "./usePdfXContext";
 
 // /* The `getFocusedElement` function is a callback function that is used to get the currently focused
 export const useGetFocusedElement = (
@@ -15,7 +14,7 @@ export const useGetFocusedElement = (
   const { traverseTreeByNodeName, traverseTreeByCSSProperties } =
     useNodeTraverse();
   const { createElement } = useSpan();
-  const dispatch = useAppDispatch();
+  const { setFocusedData, focusedData } = usePdfXContext();
 
   const createSpanElementAndListenToFocus = (
     focusedData: FocusedData,
@@ -31,7 +30,6 @@ export const useGetFocusedElement = (
       traverseTreeByCSSProperties,
     });
   };
-  const { setFocusedData, focusedData } = useContext(Context);
 
   const getFocusedElement: (keyDown?: boolean) => Promise<FocusedData> =
     useCallback(async (keyDown?: boolean) => {
@@ -54,7 +52,6 @@ export const useGetFocusedElement = (
                 range,
               };
               setFocusedData(focusedData);
-              dispatch(sliceSetFocusedData(focusedData));
               createSpanElementAndListenToFocus(focusedData, keyDown);
               resolve({
                 focusedNode,

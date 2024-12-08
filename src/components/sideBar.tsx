@@ -4,28 +4,18 @@ import { SideBarProps } from "./types";
 
 import { ColorPicker } from "./core/colorPicker";
 import { Alignment } from "./core/alignment";
-import { memo, useMemo } from "react";
+import { memo } from "react";
 import { FontSize } from "./core/FontSize";
 import { Bold } from "./core/Bold";
 import { TextStyleSelector } from "./core/TextStyleSelector";
-import { useAppDispatch } from "./store/hooks";
-import { HeadingTextStyle, TextStyleType, fontFamily } from "./utils/constants";
-import { setTextStyle } from "./store/pdfGenSlice";
+import { HeadingTextStyle, fontFamily } from "./utils/constants";
 import { Italic } from "./core/Italic";
 import { Underline } from "./core/Underline";
 import { PaperSetting } from "./core/PaperSetting/PaperSettings";
 
 const SideBarComponent = memo((props: SideBarProps) => {
-  const {
-    changeTextStyle,
-    textStyle,
-    documentName,
-    contentRef,
-    updateStyle,
-    handleNodeStyle,
-  } = props;
-
-  const dispatch = useAppDispatch();
+  const { textStyle, documentName, contentRef, updateStyle, handleNodeStyle } =
+    props;
 
   // const getLabel = useMemo(
   //   () => (options: TextStyleType[], value: HeadingTextStyleValue) => {

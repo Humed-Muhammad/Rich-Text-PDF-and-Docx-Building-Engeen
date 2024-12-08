@@ -1,15 +1,11 @@
-import { useAppDispatch } from "@/components/store/hooks";
 import { HeadingType, SheetProps } from "@/components/types";
 import { KeyboardEvent, useCallback, useEffect, useRef } from "react";
 import { useGetFocusedElement } from "./useGetFocusedElement";
-import {
-  setCurrentRef,
-  setFocusedData,
-  updatePaperRefContent,
-} from "@/components/store/pdfGenSlice";
+
 import { deltaToHtml, htmlToDelta } from "@/lib/utils";
 import { eventKeys, headingNodeName } from "../constants";
 import { handleKeyCombination } from "..";
+import { usePdfXContext } from "./usePdfXContext";
 
 export const useSheetProps = ({
   size = { width: "794px", height: "1123px" },
@@ -18,27 +14,26 @@ export const useSheetProps = ({
   content,
 }: SheetProps) => {
   const contentRef = useRef<HTMLDivElement>(null);
-  const dispatch = useAppDispatch();
   const { getFocusedElement } = useGetFocusedElement(contentRef);
-
+  const { setCurrentRef, updatePaperRefContent, setFocusedData } =
+    usePdfXContext();
   const handleEditorClick = useCallback(() => {
     contentRef?.current?.focus();
     customCommand();
-    dispatch(setCurrentRef(contentRef));
+    setCurrentRef(contentRef);
   }, [contentRef, customCommand]);
 
   useEffect(() => {
     if (contentRef.current) {
       const content = htmlToDelta(contentRef.current.innerHTML);
       // console.log(content);
-      dispatch(
-        updatePaperRefContent({
-          id: id as string,
-          content,
-        })
-      );
+
+      updatePaperRefContent({
+        id: id as string,
+        content,
+      });
     }
-  }, [contentRef.current?.innerHTML, id, dispatch]);
+  }, [contentRef.current?.innerHTML, id]);
 
   useEffect(() => {
     if (contentRef.current && content) {
@@ -49,7 +44,7 @@ export const useSheetProps = ({
   const listenAndGetFocusedElement = useCallback(
     async (keyDown?: boolean) => {
       await getFocusedElement(keyDown).then((data) => {
-        dispatch(setFocusedData(data));
+        setFocusedData(data);
       });
     },
     [getFocusedElement]
@@ -84,7 +79,7 @@ export const useSheetProps = ({
       if (eventKeys.includes(event.key)) {
         customCommand();
         await getFocusedElement(true).then((data) => {
-          dispatch(setFocusedData(data));
+          setFocusedData(data);
         });
       }
       handleKeyCombination(event, {
@@ -92,7 +87,7 @@ export const useSheetProps = ({
         combinationKey: "ctrlKey",
         async callback() {
           await getFocusedElement().then((data) => {
-            dispatch(setFocusedData(data));
+            setFocusedData(data);
           });
           customCommand();
         },

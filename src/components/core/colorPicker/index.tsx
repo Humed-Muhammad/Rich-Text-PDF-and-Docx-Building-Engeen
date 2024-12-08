@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { useAppDispatch } from "@/components/store/hooks";
-import { setTextStyle } from "@/components/store/pdfGenSlice";
+
 import { SideBarProps } from "@/components/types";
 
 import { IconTextColor, IconX } from "@tabler/icons-react";
@@ -8,9 +7,10 @@ import { useState } from "react";
 import { CompactPicker, RGBColor } from "react-color";
 import { CoreButton } from "..";
 import useSelectionStyle from "@/components/utils/hooks/useSelectionStyle";
+import { usePdfXContext } from "@/components/utils/hooks/usePdfXContext";
 
 export const ColorPicker = ({ textStyle, contentRef }: SideBarProps) => {
-  const dispatch = useAppDispatch();
+  const { updateTextStyle } = usePdfXContext();
   const [selectedColor, setSelectedColor] = useState("#000");
   const [displayColorPicker, setDisplayColorPicker] = useState(false);
   const updateStyle = useSelectionStyle();
@@ -21,7 +21,7 @@ export const ColorPicker = ({ textStyle, contentRef }: SideBarProps) => {
 
   const handleColorChange = (color: RGBColor) => {
     const rgba = `rgba(${color.r}, ${color.g}, ${color.b}, ${color.a})`;
-    dispatch(setTextStyle({ ...textStyle, color: rgba }));
+    updateTextStyle({ ...textStyle, color: rgba });
     setSelectedColor(rgba);
     updateStyle({
       color: rgba,

@@ -314,9 +314,7 @@ export const styleTheSelectedRange = ({
   focusedData,
   style,
 }: UseSpanOptions): HTMLSpanElement => {
-  const { range, selection, focusedNode } = focusedData;
-  // const isTableData = focusedNode?.parentNode?.nodeName === "TD";
-  // let span = document.createElement("span");
+  const { range, selection } = focusedData;
 
   const span = document.createElement("span");
 

@@ -37,7 +37,7 @@ export const useContextMenu = (focusedData: FocusedData) => {
       }
     });
     return () => hideCustomMenu();
-  }, [focusedData.range, showCustomMenu, hideCustomMenu]);
+  }, [focusedData?.range, showCustomMenu, hideCustomMenu]);
 
   useEffect(() => {
     listToContextMeu();

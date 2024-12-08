@@ -9,14 +9,13 @@ import {
   fontFamily,
   headingNodeName,
 } from "../constants";
-import { setTextStyle } from "@/components/store/pdfGenSlice";
-import { useAppDispatch } from "@/components/store/hooks";
 import { UseGetTextProperties } from "@/components/types";
 import { useNodeHeadingFinder } from "./useNodeHeadingFinder";
+import { usePdfXContext } from "./usePdfXContext";
 
 export const useGetTextProperties = () => {
-  const dispatch = useAppDispatch();
   const { getNodeHeading } = useNodeHeadingFinder();
+  const { updateTextStyle } = usePdfXContext();
 
   const setTextProperties = useCallback(
     ({
@@ -61,34 +60,30 @@ export const useGetTextProperties = () => {
 
       const fontSize = traverseTreeByCSSProperties?.(focusedData, "fontSize");
       // console.log({ fontSize });
-      dispatch(
-        setTextStyle({
-          bold,
-          italic,
-          heading: headingValue as TextStyleType,
-          color: selectedElementColor || selectedElementRootColor,
-          underLine,
-          textAlignment: traverseTreeByCSSProperties?.(
-            focusedData,
-            "textAlign"
-          ),
-          fontSize: extractNumberFromString(
-            [undefined, "inherit"].includes(fontSize)
-              ? "16px"
-              : (fontSize as string)
-          ),
-          fontFamily: {
-            value:
-              traverseTreeByCSSProperties?.(focusedData, "fontFamily") ||
-              fontFamily[0].value,
-            label:
-              traverseTreeByCSSProperties?.(focusedData, "fontFamily") ||
-              fontFamily[0].label,
-          },
-        })
-      );
+
+      updateTextStyle({
+        bold,
+        italic,
+        heading: headingValue as TextStyleType,
+        color: selectedElementColor || selectedElementRootColor,
+        underLine,
+        textAlignment: traverseTreeByCSSProperties?.(focusedData, "textAlign"),
+        fontSize: extractNumberFromString(
+          [undefined, "inherit"].includes(fontSize)
+            ? "16px"
+            : (fontSize as string)
+        ),
+        fontFamily: {
+          value:
+            traverseTreeByCSSProperties?.(focusedData, "fontFamily") ||
+            fontFamily[0].value,
+          label:
+            traverseTreeByCSSProperties?.(focusedData, "fontFamily") ||
+            fontFamily[0].label,
+        },
+      });
     },
-    [dispatch, getNodeHeading]
+    [getNodeHeading]
   );
 
   return {
