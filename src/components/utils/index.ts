@@ -455,7 +455,7 @@ export const generateTable = async ({
   await new Promise((resolve) => {
     requestAnimationFrame(resolve);
   });
-
+  console.log(Child, contentRef, focusedData);
   if (Child) {
     contentRef?.insertBefore(div, Child as Node);
   } else {

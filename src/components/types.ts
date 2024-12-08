@@ -28,7 +28,7 @@ export interface SheetProps {
   size: Size;
   customCommand: () => void;
   id: string | undefined;
-  content: Delta | undefined;
+  content?: Delta | undefined;
 }
 
 export type HeadingType = "H1" | "H2" | "H3" | "H4" | "H5" | "H6" | "P";

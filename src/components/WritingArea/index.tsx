@@ -5,8 +5,8 @@ import "../../styles/index.css";
 import { ContextMenu, ContextMenuTrigger } from "../ui/context-menu";
 import { ContextMenu as ShadcnContext } from "../core/ContextMenu";
 import { Sheet } from "../Sheet";
-import { useAppSelector } from "../store/hooks";
-import { selectAllPaperRefs } from "../store/pdfGenSlice/selectors";
+import { usePdfXContext } from "../utils/hooks/usePdfXContext";
+import { v4 } from "uuid";
 
 export const WritingArea = ({
   size = { width: "794px", height: "1123px" },
@@ -15,20 +15,24 @@ export const WritingArea = ({
   hideCustomMenu,
   updateStyle,
 }: WritingAreaOptions) => {
-  const allPaperRefs = useAppSelector(selectAllPaperRefs);
+  const { paperRefs } = usePdfXContext();
 
   return (
     <ContextMenu>
       <ContextMenuTrigger id="writingArea-playground-container">
-        {allPaperRefs?.map((paperRef) => (
-          <Sheet
-            id={paperRef.id}
-            customCommand={hideCustomMenu}
-            size={size}
-            key={paperRef.id}
-            content={paperRef.content}
-          />
-        ))}
+        {paperRefs?.length ? (
+          paperRefs?.map((paperRef) => (
+            <Sheet
+              id={paperRef.id}
+              customCommand={hideCustomMenu}
+              size={size}
+              key={paperRef.id}
+              content={paperRef.content}
+            />
+          ))
+        ) : (
+          <Sheet id={v4()} customCommand={hideCustomMenu} size={size} />
+        )}
       </ContextMenuTrigger>
       <ShadcnContext
         updateStyle={updateStyle}

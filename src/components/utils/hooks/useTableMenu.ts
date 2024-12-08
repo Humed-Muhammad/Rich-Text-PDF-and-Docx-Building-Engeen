@@ -51,6 +51,53 @@ export const useTableMenu = ({ contentRef }: Partial<WritingAreaOptions>) => {
       });
     });
 
+    // Drag Selection
+    const selectedTds: Array<HTMLTableCellElement> = [];
+    let isMouseDown = false;
+    let startCell: HTMLTableCellElement | null = null;
+    tableTds?.forEach((td) => {
+      // Handle drag selection start
+      td.addEventListener("dblclick", (e) => {
+        isMouseDown = true;
+        startCell = td as HTMLTableCellElement;
+        td.style.backgroundColor = "lightblue";
+        e.preventDefault(); // Prevent text selection
+      });
+
+      // Handle drag selection
+      td.addEventListener("mouseover", () => {
+        if (isMouseDown) {
+          td.style.backgroundColor = "lightblue";
+          selectedTds.push(td);
+        }
+      });
+
+      // Handle ctrl+click for multiple selection
+      td.addEventListener("click", (e) => {
+        if (e.ctrlKey || e.metaKey) {
+          console.log(e.ctrlKey, e.metaKey);
+          const highlighted = !["initial", "", null, undefined].includes(
+            td.style.getPropertyPriority("background-color") as string
+          );
+          console.log(
+            { highlighted },
+            td.style.getPropertyPriority("background-color")
+          );
+          td.style.backgroundColor = highlighted ? "initial" : "lightblue";
+        } else if (!isMouseDown) {
+          // Clear other selections if not dragging or ctrl-clicking
+          tableTds.forEach((cell) => (cell.style.backgroundColor = "initial"));
+          td.style.backgroundColor = "initial";
+        }
+      });
+    });
+
+    // Handle drag selection end
+    document.addEventListener("mouseup", () => {
+      isMouseDown = false;
+    });
+    // End
+
     allTables?.forEach((table) => {
       /**@description This specific selection is needed to only consider the first row of each tables */
       const element = table?.childNodes?.[0]?.childNodes?.[0] as Element;
