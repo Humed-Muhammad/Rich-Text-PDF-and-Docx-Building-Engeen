@@ -19,6 +19,10 @@ export const useTableMenu = ({ contentRef }: Partial<WritingAreaOptions>) => {
     setColumnSettingPosition,
     domUpdated,
     setDomUpdated,
+    setActiveTable,
+    activeTable,
+    setTableDraggerPosition,
+    tableDraggerPosition,
   } = usePdfXContext();
 
   const handleRowColOperation = useCallback(() => {
@@ -60,14 +64,14 @@ export const useTableMenu = ({ contentRef }: Partial<WritingAreaOptions>) => {
       td.addEventListener("dblclick", (e) => {
         isMouseDown = true;
         startCell = td as HTMLTableCellElement;
-        td.style.backgroundColor = "lightblue";
+        td.style.backgroundColor = "#ccddfe";
         e.preventDefault(); // Prevent text selection
       });
 
       // Handle drag selection
       td.addEventListener("mouseover", () => {
         if (isMouseDown) {
-          td.style.backgroundColor = "lightblue";
+          td.style.backgroundColor = "#ccddfe";
           selectedTds.push(td);
         }
       });
@@ -83,7 +87,7 @@ export const useTableMenu = ({ contentRef }: Partial<WritingAreaOptions>) => {
             { highlighted },
             td.style.getPropertyPriority("background-color")
           );
-          td.style.backgroundColor = highlighted ? "initial" : "lightblue";
+          td.style.backgroundColor = highlighted ? "initial" : "#ccddfe";
         } else if (!isMouseDown) {
           // Clear other selections if not dragging or ctrl-clicking
           tableTds.forEach((cell) => (cell.style.backgroundColor = "initial"));
@@ -99,6 +103,10 @@ export const useTableMenu = ({ contentRef }: Partial<WritingAreaOptions>) => {
     // End
 
     allTables?.forEach((table) => {
+      table.setAttribute("draggable", "true");
+      table.addEventListener("mouseenter", () => {
+        setActiveTable(table);
+      });
       /**@description This specific selection is needed to only consider the first row of each tables */
       const element = table?.childNodes?.[0]?.childNodes?.[0] as Element;
       const tds = element.querySelectorAll("td");
@@ -169,6 +177,27 @@ export const useTableMenu = ({ contentRef }: Partial<WritingAreaOptions>) => {
     activeColTd,
   });
 
+  const updateTableDraggerPosition = useCallback(() => {
+    const rect = activeTable?.getBoundingClientRect();
+
+    const scrollX = window.scrollX || window.pageXOffset;
+    const scrollY = window.scrollY || window.pageYOffset;
+    if (rect) {
+      setTableDraggerPosition({
+        x: rect?.left + scrollX,
+        y: rect?.top + scrollY,
+      });
+    }
+  }, [activeTable]);
+
+  useEffect(() => {
+    updateTableDraggerPosition();
+  }, [updateTableDraggerPosition]);
+
+  useEffect(() => {
+    console.log(tableDraggerPosition);
+  }, [tableDraggerPosition]);
+
   return {
     rowSettingPosition,
     activeTr,
@@ -180,5 +209,7 @@ export const useTableMenu = ({ contentRef }: Partial<WritingAreaOptions>) => {
     activeColTr,
     insertColumnLeft,
     insertColumnRight,
+    activeTable,
+    tableDraggerPosition,
   };
 };

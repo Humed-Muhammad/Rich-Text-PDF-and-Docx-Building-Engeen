@@ -3,7 +3,7 @@ import { SideBar } from "./components/sideBar";
 
 import { useTextStyleChange } from "./components/utils/hooks/useTextStyleChange";
 import { useContextMenu } from "./components/utils/hooks/useContextMenu";
-import { ColumnMenu, RowMenu } from "./components/core/TableMenu";
+import { ColumnMenu, RowMenu, TableDragger } from "./components/core/TableMenu";
 import useSelectionStyle from "./components/utils/hooks/useSelectionStyle";
 import { useTD } from "./components/utils/hooks/useTD";
 import { usePdfXContext } from "./components/utils/hooks/usePdfXContext";
@@ -39,6 +39,12 @@ function App() {
         updateStyle={updateStyle}
       />
       <ColumnMenu
+        changeTextStyle={changeTextStyle}
+        hideCustomMenu={hideCustomMenu}
+        contentRef={currentRef?.current}
+        updateStyle={updateStyle}
+      />
+      <TableDragger
         changeTextStyle={changeTextStyle}
         hideCustomMenu={hideCustomMenu}
         contentRef={currentRef?.current}

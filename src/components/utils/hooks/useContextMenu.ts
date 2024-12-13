@@ -1,7 +1,7 @@
 import { FocusedData } from "@/components/types";
 import { useCallback, useEffect } from "react";
 
-export const useContextMenu = (focusedData: FocusedData) => {
+export const useContextMenu = (focusedData: Partial<FocusedData>) => {
   const contextMenu = document.getElementById("pdfx-context-menu");
 
   // Function to show the custom menu

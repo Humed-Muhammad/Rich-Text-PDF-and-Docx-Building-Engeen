@@ -53,8 +53,8 @@ export interface IContext {
   setRowSettingPosition: Dispatch<SetStateAction<Position>>;
   columnSettingPosition: Position;
   setColumnSettingPosition: Dispatch<SetStateAction<Position>>;
-  focusedData: FocusedData;
-  setFocusedData: Dispatch<SetStateAction<FocusedData | undefined>>;
+  focusedData: Partial<FocusedData>;
+  setFocusedData: Dispatch<SetStateAction<Partial<FocusedData>>>;
   domUpdated: string;
   setDomUpdated: Dispatch<SetStateAction<string>>;
 
@@ -76,4 +76,10 @@ export interface IContext {
   updatePaperRefContent: (value: { id: string; content: Delta }) => void;
   removePaper: (index: number) => void;
   setFocusedPaperId: Dispatch<SetStateAction<string>>;
+
+  // Table state
+  activeTable: HTMLElement | undefined;
+  setActiveTable: Dispatch<SetStateAction<HTMLElement | undefined>>;
+  tableDraggerPosition: Position;
+  setTableDraggerPosition: Dispatch<SetStateAction<Position>>;
 }

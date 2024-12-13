@@ -27,8 +27,12 @@ export const ContextProvider = ({ children }: Props) => {
   const [columnSettingPosition, setColumnSettingPosition] = useState<Position>(
     {}
   );
-  const [focusedData, setFocusedData] = useState<FocusedData>();
+  const [focusedData, setFocusedData] = useState<Partial<FocusedData>>({});
   const [domUpdated, setDomUpdated] = useState("");
+  const [activeTable, setActiveTable] = useState<HTMLElement | undefined>();
+  const [tableDraggerPosition, setTableDraggerPosition] = useState<Position>(
+    {}
+  );
 
   const addFontFamilies = (fontFamilies: Array<TextStyleType>) =>
     setFontFamilies((prev) => [...prev, ...fontFamilies]);
@@ -130,6 +134,10 @@ export const ContextProvider = ({ children }: Props) => {
         setFocusedPaperId,
         currentRef,
         setCurrentRef,
+        activeTable,
+        setActiveTable,
+        tableDraggerPosition,
+        setTableDraggerPosition,
       }}
     >
       {children}

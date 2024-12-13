@@ -8,8 +8,9 @@ import {
 } from "../ui/menubar";
 import { WritingAreaOptions } from "../types";
 import { useTableMenu } from "../utils/hooks/useTableMenu";
-import { IconMinus } from "@tabler/icons-react";
+import { IconArrowsMove, IconMinus } from "@tabler/icons-react";
 import { memo } from "react";
+import { Button } from "../ui/button";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const RowMenu = memo(({ contentRef }: WritingAreaOptions) => {
@@ -79,6 +80,28 @@ export const ColumnMenu = memo(({ contentRef }: WritingAreaOptions) => {
           </MenubarContent>
         </MenubarMenu>
       </Menubar>
+    </div>
+  );
+});
+
+export const TableDragger = memo(({ contentRef }: WritingAreaOptions) => {
+  const { tableDraggerPosition } = useTableMenu({
+    contentRef,
+  });
+
+  return (
+    <div
+      className={`${
+        !tableDraggerPosition.x && !tableDraggerPosition.y ? "hidden" : "block"
+      }  bg-white w-9 rounded-sm border border-gray-50 cursor-pointer absolute`}
+      style={{
+        top: Number((tableDraggerPosition.y ?? 0) - 10),
+        right: Number((tableDraggerPosition.x ?? 0) - 10),
+      }}
+    >
+      <Button size="icon" variant="ghost" className="bg-transparent">
+        <IconArrowsMove className="cursor-pointer bg-transparent" />
+      </Button>
     </div>
   );
 });
