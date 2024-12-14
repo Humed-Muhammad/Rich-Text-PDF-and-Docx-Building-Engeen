@@ -10,7 +10,7 @@ import {
   MenubarSubTrigger,
   MenubarTrigger,
 } from "@/components/ui/menubar";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { generateTable } from "../utils";
 import { EditableContentArea } from "../types";
 import { Input } from "../ui/input";
@@ -27,6 +27,7 @@ export function MenuBar({ contentRef }: EditableContentArea) {
 
   const { setTableCreated } = usePdfXContext();
   const { focusedData } = useContext(Context);
+
   return (
     <Menubar className="bg-transparent border-0 shadow-none">
       <MenubarMenu>
@@ -103,7 +104,7 @@ export function MenuBar({ contentRef }: EditableContentArea) {
                   });
                   setTimeout(() => {
                     setTableCreated((prev) => !prev);
-                  }, 2000);
+                  }, 1000);
                 }}
               >
                 Create

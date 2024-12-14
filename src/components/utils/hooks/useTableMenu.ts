@@ -79,14 +79,14 @@ export const useTableMenu = ({ contentRef }: Partial<WritingAreaOptions>) => {
       // Handle ctrl+click for multiple selection
       td.addEventListener("click", (e) => {
         if (e.ctrlKey || e.metaKey) {
-          console.log(e.ctrlKey, e.metaKey);
+          // console.log(e.ctrlKey, e.metaKey);
           const highlighted = !["initial", "", null, undefined].includes(
             td.style.getPropertyPriority("background-color") as string
           );
-          console.log(
-            { highlighted },
-            td.style.getPropertyPriority("background-color")
-          );
+          // console.log(
+          //   { highlighted },
+          //   td.style.getPropertyPriority("background-color")
+          // );
           td.style.backgroundColor = highlighted ? "initial" : "#ccddfe";
         } else if (!isMouseDown) {
           // Clear other selections if not dragging or ctrl-clicking

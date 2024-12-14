@@ -13,6 +13,8 @@ import {
 import { NodeStyle, inlineElements } from "./constants";
 import { v4 } from "uuid";
 import { convertToCSSProperty } from "./helpers";
+import { DraggableWrapper } from "../core/DraggableWrapper";
+import ReactDOM from "react-dom";
 
 /**
  * Retrieves the color properties of the selected element and its root ancestor.
@@ -396,6 +398,7 @@ export const generateTable = async ({
   contentRef,
   focusedData,
 }: TableGeneratorOptions) => {
+  console.log(focusedData?.focusedNode);
   const rowCols: Node[] = [];
 
   // Create table rows
@@ -434,30 +437,43 @@ export const generateTable = async ({
   div.appendChild(table);
 
   div.setAttribute("class", "pdfx-table-container");
+  div.setAttribute("draggable", "true");
+  div.addEventListener("dragstart", (e) => {
+    const htmlContent = div.outerHTML;
+    e.dataTransfer?.setData("text/html", htmlContent);
+  });
+
+  div.addEventListener("dragend", (e) => {
+    // remove the element from the DOM
+    div.remove();
+    e.dataTransfer?.clearData();
+  });
   const tree = getParentTrees(focusedData?.focusedNode);
 
   /* The code is checking if a `Child` element exists in a tree structure. It first
  tries to access the last node's next sibling in the tree, and if it exists, it inserts a `div`
  element before that node. If the next sibling does not exist, it falls back to inserting the `div`
  element as a child of the content reference. */
-  let Child = null;
-  if (tree?.length > 0) {
-    const lastNode = tree[tree.length - 1]?.node;
-    if (lastNode) {
-      Child = lastNode.nextSibling;
-      if (!Child) {
-        Child = lastNode;
-      }
-    }
-  }
+  // let Child = null;
+  // if (tree?.length > 0) {
+  //   const lastNode = tree[tree.length - 1]?.node;
+  //   if (lastNode) {
+  //     Child = lastNode.nextSibling;
+  //     if (!Child) {
+  //       Child = lastNode;
+  //     }
+  //   }
+  // }
 
   // Wait for the DOM to update before inserting the div element
   await new Promise((resolve) => {
     requestAnimationFrame(resolve);
   });
-  console.log(Child, contentRef, focusedData);
-  if (Child) {
-    contentRef?.insertBefore(div, Child as Node);
+  if (focusedData?.focusedNode?.nodeName === "#text") {
+    focusedData?.focusedNode?.parentElement?.insertBefore(
+      div,
+      focusedData?.focusedNode
+    );
   } else {
     contentRef?.appendChild(div);
   }

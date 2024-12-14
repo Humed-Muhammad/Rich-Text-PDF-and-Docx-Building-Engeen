@@ -8,6 +8,8 @@ import useSelectionStyle from "./components/utils/hooks/useSelectionStyle";
 import { useTD } from "./components/utils/hooks/useTD";
 import { usePdfXContext } from "./components/utils/hooks/usePdfXContext";
 
+import { DraggableWrapper } from "./components/core/DraggableWrapper";
+
 function App() {
   const changeTextStyle = useTextStyleChange();
   const updateStyle = useSelectionStyle();
@@ -24,7 +26,8 @@ function App() {
         {...changeTextStyle}
       />
       {/* <Ruler /> */}
-      <div className="pdfx-writing-area-container">
+
+      <div id="writing-area" className="pdfx-writing-area-container">
         <WritingArea
           changeTextStyle={changeTextStyle}
           hideCustomMenu={hideCustomMenu}

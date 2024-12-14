@@ -120,7 +120,7 @@ export interface JSONRepresentation {
 }
 
 export interface UseSpanOptions {
-  focusedData: FocusedData;
+  focusedData: Partial<FocusedData>;
   style?: Partial<CSSStyleDeclaration>;
 }
 
@@ -187,7 +187,7 @@ export type HandleNodeStyleOptions = {
 export interface TableGeneratorOptions extends EditableContentArea {
   rows: number;
   columns: number;
-  focusedData: FocusedData | undefined;
+  focusedData: Partial<FocusedData> | undefined;
 }
 
 export interface TableRowGeneratorOptions {
@@ -201,7 +201,7 @@ export interface Position {
 
 export type Alignment = "center" | "right" | "left";
 export interface TextAlignmentExeCommand {
-  focusedData: FocusedData;
+  focusedData: Partial<FocusedData>;
   alignment: Alignment;
   value?: string;
 }

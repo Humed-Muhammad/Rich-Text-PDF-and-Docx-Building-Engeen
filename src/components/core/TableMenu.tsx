@@ -9,7 +9,7 @@ import {
 import { WritingAreaOptions } from "../types";
 import { useTableMenu } from "../utils/hooks/useTableMenu";
 import { IconArrowsMove, IconMinus } from "@tabler/icons-react";
-import { memo } from "react";
+import { memo, useRef } from "react";
 import { Button } from "../ui/button";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -88,20 +88,30 @@ export const TableDragger = memo(({ contentRef }: WritingAreaOptions) => {
   const { tableDraggerPosition } = useTableMenu({
     contentRef,
   });
+  const ref = useRef<SVGSVGElement>(null);
 
   return (
     <div
       className={`${
         !tableDraggerPosition.x && !tableDraggerPosition.y ? "hidden" : "block"
-      }  bg-white w-9 rounded-sm border border-gray-50 cursor-pointer absolute`}
+      } absolute`}
       style={{
         top: Number((tableDraggerPosition.y ?? 0) - 10),
         right: Number((tableDraggerPosition.x ?? 0) - 10),
       }}
     >
-      <Button size="icon" variant="ghost" className="bg-transparent">
-        <IconArrowsMove className="cursor-pointer bg-transparent" />
-      </Button>
+      <>
+        <IconArrowsMove
+          ref={ref}
+          onDoubleClick={() => {
+            ref.current?.classList.add("cursor-grabbing");
+          }}
+          onMouseUpCapture={() => {
+            ref.current?.classList.remove("cursor-grabbing");
+          }}
+          className="cursor-grab bg-transparent"
+        />
+      </>
     </div>
   );
 });
